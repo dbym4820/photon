@@ -1,14 +1,14 @@
-# PHOTON
-
-## What is PHOTON
-
-CommonLisp GUI library using WEB technology
+# PHOTON: Concept Level Programming Environment
 
 ## Installation
 
+```
+(ql:quickload :photon)
+
+
 ## Copyright
 
-Copyright (c) 2017 Tomoki ABURATANI (aburatanitomoki@gmail.com)
+Copyright (c) 2018 Tomoki ABURATANI (aburatanitomoki@gmail.com)
 
 ## License
 

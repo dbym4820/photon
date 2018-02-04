@@ -1,0 +1,19 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn
+  (ros:ensure-asdf)
+  #+quicklisp
+  (unless (find-package :photon)
+    (ql:quickload :photon :silent t)))
+
+(defpackage #:ros.script.photon
+  (:use :cl :photon))
+(in-package #:ros.script.photon)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (format t "~A~%" argv))
+;;; vim: set ft=lisp lisp:
