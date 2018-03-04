@@ -8,32 +8,24 @@
   :author "Tomoki ABURATANI"
   :license "MIT"
   :homepage "https://github.com/dbym4820/photon"
-  :depends-on (:qtools
-	       :qtcore
-               :qtgui
-               :uiop
+  :depends-on (:uiop
                :cl-fad
 	       :cl-ppcre
 	       :alexandria
                :local-time
-               :ningle
                :bordeaux-threads
-               :cffi
 	       :dexador
 	       :trivial-shell
-	       :jonathan)
+	       :jonathan
+	       :xmls)
   :serial t
   :components ((:module "src"
                 :components
-                ((:file "utils")
-                 (:file "window")
-                 (:file "concept")
-                 (:file "init")
-                 (:file "photon"))))
-  :build-operation "qt-program-op"
-  :build-pathname "photon"
-  :entry-point "photon:start-photon"
-  :description "Concept Level Programing Environment"
+                ((:file "ontology")
+		 (:file "hozo")
+		 (:file "module")
+		 (:file "photon"))))
+  :description "Ontology Based System Extenstion Framework"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.md"

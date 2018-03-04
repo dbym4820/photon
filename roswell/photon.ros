@@ -15,5 +15,4 @@ exec ros -Q -- $0 "$@"
 
 (defun main (&rest argv)
   (declare (ignorable argv))
-  (format t "~A~%" argv))
-;;; vim: set ft=lisp lisp:
+  )

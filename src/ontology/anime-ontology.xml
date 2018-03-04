@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OE_FILE filename="anime-ontology.xml" ont_id="1481885440000ont" >
+<FILENAME_ONT>anime-ontology.xml</FILENAME_ONT>
+<W_CONCEPTS>
+<CANVAS_SIZE w="7898" h="7818" x="27" y="0" />
+<CONCEPT id="1481885440000_n0" class_constraint="slot2" >
+<LABEL>Any</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="40" y="60"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="Any" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1481885440000_n1" class_constraint="slot2" >
+<LABEL>アニメ</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="220" y="171"/>
+<SUB_TREE>open</SUB_TREE>
+<SLOTS>
+<SLOT id="1481885440000_s2" 
+ type="NW"  label="slot"  kind="a/o"  num="1.."  role="作品名"  class_constraint="string"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="slot" def="" role_name="作品名" class_const="string" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s3" 
+ type="NW"  label="slot3"  kind="a/o"  num="1.."  role="放送年度"  class_constraint="年度"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="slot3" def="" role_name="放送期間" class_const="年度" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s4" 
+ type="NW"  label="slot5"  kind="a/o"  num="1.."  role="流通形態"  class_constraint="メディア"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="slot5" def="" role_name="放送メディア" class_const="メディア" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s5" 
+ type="NW"  label="slot6"  kind="a/o"  num="1.."  role="放送の長さ"  class_constraint="時間"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="時間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s6" 
+ type="NW"  label="slot7"  kind="p/o"  num="1"  role="シナリオ"  class_constraint="シナリオ"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SLOTS>
+<SLOT id="1481885440000_s7" 
+ type="R2-1"  label="slot"  kind="p/o"  num="1"  role="登場人物"  class_constraint="キャラクター"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SLOTS>
+<SLOT id="1481885440000_s8" 
+ type="R2-2"  label="slot"  kind="p/o"  num="1"  role="ヒーロー"  class_constraint="男性キャラクター"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="男性キャラクター" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s9" 
+ type="R2-2"  label="slot2"  kind="p/o"  num="1"  role="ヒロイン"  class_constraint="女性キャラクター"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="女性キャラクター" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s10" 
+ type="R2-2"  label="slot3"  kind="p/o"  num="1"  role="モブキャラ"  class_constraint="キャラクター"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="キャラクター" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<SUB_L label="" def="" role_name="" class_const="キャラクター" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s11" 
+ type="R2-1"  label="slot3"  kind="p/o"  num="1"  role="話の内容"  class_constraint="話"  rh_name="ストーリー"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="話" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<SUB_L label="" def="" role_name="" class_const="シナリオ" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s12" 
+ type="NW"  label="slot8"  kind="p/o"  num="1"  role="制作陣role"  class_constraint="制作"  rh_name="製作委員会"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SLOTS>
+<SLOT id="1481885440000_s13" 
+ type="R2-1"  label="slot"  kind="p/o"  num="1"  role="制作会社role"  class_constraint="会社"  rh_name="制作会社"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="会社" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s14" 
+ type="R2-1"  label="slot2"  kind="p/o"  num="1"  role="監督role"  class_constraint="人間"  rh_name="監督"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s15" 
+ type="R2-1"  label="slot3"  kind="p/o"  num="1"  role="キャストrole"  class_constraint="人間"  rh_name="キャスト"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SLOTS>
+<SLOT id="1481885440000_s16" 
+ type="R2-1"  label="slot2"  kind="p/o"  num="1"  role="声優ロール"  class_constraint="人間"  rh_name="声優"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s17" 
+ type="R2-1"  label="slot4"  kind="p/o"  num="1"  role="作画担当role"  class_constraint="人間"  rh_name="政策担当者"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s18" 
+ type="R2-1"  label="slot5"  kind="p/o"  num="0.."  role="シナリオ担当role"  class_constraint="人間"  rh_name="シナリオライター"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s19" 
+ type="R2-1"  label="slot6"  kind="p/o"  num="1"  role="演出担当role"  class_constraint="人間"  rh_name="演出家"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s20" 
+ type="R2-1"  label="slot7"  kind="p/o"  num="1"  role="出資者"  class_constraint="会社"  rh_name="スポンサー"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="会社" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<SUB_L label="" def="" role_name="" class_const="制作" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s21" 
+ type="NW"  label="slot2"  kind="a/o"  num="1"  role="想定対象者"  class_constraint="人間"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SLOTS>
+<SLOT id="1481885440000_s22" 
+ type="R2-1"  label="slot"  kind="p/o"  num="1"  role="年齢"  class_constraint="正の整数"  rh_name="対象年齢"  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="正の整数" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s23" 
+ type="R2-1"  label="slot2"  kind="p/o"  num="1"  role="性別"  class_constraint="性別"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="性別" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<SUB_L label="" def="" role_name="" class_const="人間" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="アニメ" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1481885440000_n24" class_constraint="slot2" >
+<LABEL>TVアニメ</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="626" y="495"/>
+<SLOTS>
+<SLOT id="1481885440000_s25" 
+ type="NW"  label="slot"  kind="a/o"  num="1"  role="流通形態"  class_constraint="テレビ"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PARENT_SLOT slot="アニメ$slot5"/>
+<SUB_L label="slot" def="" role_name="テレビ" class_const="テレビ" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="TVアニメ" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1481885440000_n26" class_constraint="slot2" >
+<LABEL>アニメ映画</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="580" y="576"/>
+<SLOTS>
+<SLOT id="1481885440000_s27" 
+ type="NW"  label="slot"  kind="a/o"  num="1"  role="流通形態"  class_constraint="映画"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PARENT_SLOT slot="アニメ$slot5"/>
+<SUB_L label="slot" def="" role_name="映画" class_const="映画" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="アニメ映画" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1481885440000_n52" class_constraint="slot2" >
+<LABEL>Webアニメ</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="636" y="401"/>
+<SLOTS>
+<SLOT id="1481885440000_s53" 
+ type="NW"  label="slot"  kind="a/o"  num="1"  role="流通形態"  class_constraint="Web"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PARENT_SLOT slot="アニメ$slot5"/>
+<SUB_L label="" def="" role_name="" class_const="Web" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1481885440000_n54" class_constraint="slot2" >
+<LABEL>キャラクター</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="700" y="300"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<SLOTS>
+<SLOT id="1481885440000_s55" 
+ type="NW"  label="slot"  kind="a/o"  num="1"  role="名前"  class_constraint="文字列"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="文字列" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s56" 
+ type="NW"  label="slot2"  kind="a/o"  num="1.."  role="性別"  class_constraint="性別"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="性別" rh_name ="" value ="" />
+</SLOT>
+<SLOT id="1481885440000_s57" 
+ type="NW"  label="slot3"  kind="a/o"  num="1"  role="性格"  class_constraint="性格"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<SUB_L label="" def="" role_name="" class_const="性格" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="slot2" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1512738370000_n35" >
+<LABEL>女性キャラクター</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="820" y="300"/>
+<PART_TREE>close</PART_TREE>
+<SLOTS>
+<SLOT id="1517584941000_s35" 
+ type="OR"  label="slot2"  kind="a/o"  num="1.."  role="性別"  class_constraint="女"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<PARENT_SLOT slot="キャラクター$slot2"/>
+<SUB_L label="" def="" role_name="" class_const="女" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517584941000_n36" >
+<LABEL>男性キャラクター</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="820" y="340"/>
+<PART_TREE>close</PART_TREE>
+<SLOTS>
+<SLOT id="1517584941000_s37" 
+ type="OR"  label="slot2"  kind="a/o"  num="1"  role="性別"  class_constraint="男"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<PART_TREE>close</PART_TREE>
+<PARENT_SLOT slot="キャラクター$slot2"/>
+<SUB_L label="" def="" role_name="" class_const="男" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517586489000_n38" >
+<LABEL>実在物</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="160" y="60"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517586489000_n39" >
+<LABEL>非実在物</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="60" y="182"/>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n40" >
+<LABEL>概念的存在</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="468" y="200"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n41" >
+<LABEL>実際的存在</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="320" y="40"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n42" >
+<LABEL>生物</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="486" y="26"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n43" >
+<LABEL>非生物</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="426" y="106"/>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n44" >
+<LABEL>哺乳類</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="560" y="0"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n45" >
+<LABEL>鳥類</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="560" y="40"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n46" >
+<LABEL>爬虫類</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="568" y="80"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n47" >
+<LABEL>人間</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="700" y="20"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n48" >
+<LABEL>物語</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="768" y="140"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n49" >
+<LABEL>伝記</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="826" y="120"/>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n50" >
+<LABEL>神話</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="846" y="140"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n51" >
+<LABEL>NEW</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="860" y="168"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n52" >
+<LABEL>擬人化キャラクター</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="820" y="366"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1517590147000_n53" >
+<LABEL>その他のキャラクター</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="828" y="408"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<ISA id="1481885440000_isa59" parent="アニメ" child="TVアニメ" />
+<ISA id="1481885440000_isa60" parent="アニメ" child="アニメ映画" />
+<ISA id="1481885440000_isa77" parent="アニメ" child="Webアニメ" />
+<ISA id="1512738370000_isa41" parent="キャラクター" child="女性キャラクター" />
+<ISA id="1517584941000_isa44" parent="キャラクター" child="男性キャラクター" />
+<ISA id="1517586489000_isa45" parent="Any" child="実在物" />
+<ISA id="1517586489000_isa46" parent="Any" child="非実在物" />
+<ISA id="1517586489000_isa48" parent="実在物" child="アニメ" />
+<ISA id="1517590147000_isa62" parent="実在物" child="概念的存在" />
+<ISA id="1517590147000_isa63" parent="概念的存在" child="キャラクター" />
+<ISA id="1517590147000_isa64" parent="実在物" child="実際的存在" />
+<ISA id="1517590147000_isa65" parent="実際的存在" child="生物" />
+<ISA id="1517590147000_isa66" parent="実際的存在" child="非生物" />
+<ISA id="1517590147000_isa67" parent="生物" child="哺乳類" />
+<ISA id="1517590147000_isa68" parent="生物" child="鳥類" />
+<ISA id="1517590147000_isa69" parent="生物" child="爬虫類" />
+<ISA id="1517590147000_isa70" parent="哺乳類" child="人間" />
+<ISA id="1517590147000_isa71" parent="概念的存在" child="物語" />
+<ISA id="1517590147000_isa72" parent="物語" child="伝記" />
+<ISA id="1517590147000_isa73" parent="物語" child="神話" />
+<ISA id="1517590147000_isa74" parent="物語" child="NEW" />
+<ISA id="1517590147000_isa75" parent="キャラクター" child="擬人化キャラクター" />
+<ISA id="1517590147000_isa76" parent="キャラクター" child="その他のキャラクター" />
+</W_CONCEPTS>
+<R_CONCEPTS>
+<CANVAS_SIZE w="10435" h="9965" />
+</R_CONCEPTS>
+<PRINTER>
+<PAGE_SETTINGS header="true" footer="true" cropmarks="true" scale="100" />
+<PAGE_FORMAT w="595.0" h="842.0" iw="559.0" ih="783.0" ix="18.0" iy="18.0" />
+<PRINTER_SETTINGS orientation="1" printername="研究室プリンタ" />
+</PRINTER>
+</OE_FILE>

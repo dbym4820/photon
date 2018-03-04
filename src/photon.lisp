@@ -1,18 +1,23 @@
 (in-package :cl-user)
 (defpackage photon
   (:use :cl)
-  (:import-from :photon.window
-                :generate-window
-                :display-window
-                :vanish-window)
-  (:import-from :photon.concept
-                :convert-concept)
-  (:export :start-photon
-           :stop-photon))
+  (:import-from :photon.hozo
+		:convert-ontology)
+  (:import-from :photon.ontology
+		:concept
+                :make-ontology
+		:make-concept
+                :add-concept
+		:append-concept
+                :clear-ontology
+		:show-concepts
+                :find-concept
+		:find-attribute
+                :show-attribute)
+  (:export :convert-ontology
+	   :make-concept
+	   :make-ontology
+	   :add-concept
+	   :show-concepts
+	   :find-concept))
 (in-package :photon)
-
-(defun start-photon ()
-  )
-
-
-(defun stop-photon ())
