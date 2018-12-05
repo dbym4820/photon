@@ -60,7 +60,7 @@ $ photon -p アニメ /path/to/ontology/file.xml
 実在物
 ```
 
-- get child/sub concepts 
+- get child/sub concepts (--child or -c option)
 
 ```
 $ photon -c アニメ /path/to/ontology/file.xml
