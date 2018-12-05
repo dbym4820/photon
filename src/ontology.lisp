@@ -188,7 +188,7 @@ CLOSオントロジー操作用API
 ;;; 第１引数として与えた基本概念が第２引数として与えた基本概念の下位概念かを調べる述語（継承関係の有無を調べる）
 ;;; 後にCLOSクラスを引数として取るメソッドに変更
 (defgeneric concept-inherit-p (source-concept target-concept &key))
-(defmethod concept-inherit-p ((source-concept basic-concept) (target-concept basic-concept) &key (ont *default-ontology*) )
+(defmethod concept-inherit-p ((source-concept basic-concept) (target-concept basic-concept) &key (ont *default-ontology*))
   (labels ((rec-pred (sou)
 	     (cond ((null sou) nil)
 		   ((string= (concept-name sou) (concept-name target-concept)) t)

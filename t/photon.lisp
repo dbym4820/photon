@@ -7,8 +7,17 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :photon)' in your Lisp.
 
-(plan nil)
+(plan 3)
 
-;; blah blah blah.
+(subtest "convert-test"
+  (ok (not (not (photon:convert-ontology)))))
+
+(subtest "basic-concept check"
+  (loop for c in (photon:show-concepts)
+	do (is-type (photon:find-concept c) 'photon.ontology::basic-concept)))
+
+(subtest "whole-root existence check"
+  (is "whole-root" (photon:concept-name (photon:find-concept "whole-root"))))
+
 
 (finalize)
