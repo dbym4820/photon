@@ -200,6 +200,8 @@
 <SUB_LABELS>
 </SUB_LABELS>
 <POS x="580" y="576"/>
+<PART_TREE>close</PART_TREE>
+<SUB_TREE>open</SUB_TREE>
 <SLOTS>
 <SLOT id="1481885440000_s27" 
  type="NW"  label="slot"  kind="a/o"  num="1"  role="流通形態"  class_constraint="映画"  rh_name=""  value="" >
@@ -467,6 +469,25 @@
 </RELATIONS>
 <SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
 </CONCEPT>
+<CONCEPT id="1517643455000_n54" >
+<LABEL>長編アニメ映画</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="718" y="668"/>
+<PART_TREE>close</PART_TREE>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
+<CONCEPT id="1543993410000_n55" >
+<LABEL>短編アニメ映画</LABEL>
+<SUB_LABELS>
+</SUB_LABELS>
+<POS x="600" y="596"/>
+<RELATIONS>
+</RELATIONS>
+<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+</CONCEPT>
 <ISA id="1481885440000_isa59" parent="アニメ" child="TVアニメ" />
 <ISA id="1481885440000_isa60" parent="アニメ" child="アニメ映画" />
 <ISA id="1481885440000_isa77" parent="アニメ" child="Webアニメ" />
@@ -490,9 +511,11 @@
 <ISA id="1517590147000_isa74" parent="物語" child="NEW" />
 <ISA id="1517590147000_isa75" parent="キャラクター" child="擬人化キャラクター" />
 <ISA id="1517590147000_isa76" parent="キャラクター" child="その他のキャラクター" />
+<ISA id="1517643455000_isa78" parent="アニメ映画" child="長編アニメ映画" />
+<ISA id="1543993410000_isa80" parent="アニメ映画" child="短編アニメ映画" />
 </W_CONCEPTS>
 <R_CONCEPTS>
-<CANVAS_SIZE w="10435" h="9965" />
+<CANVAS_SIZE w="11308" h="10691" />
 </R_CONCEPTS>
 <PRINTER>
 <PAGE_SETTINGS header="true" footer="true" cropmarks="true" scale="100" />

@@ -4,7 +4,7 @@
 (in-package :photon-asd)
 
 (defsystem photon
-  :version "0.1"
+  :version "0.1.1"
   :author "Tomoki ABURATANI"
   :license "MIT"
   :homepage "https://github.com/dbym4820/photon"
@@ -18,13 +18,14 @@
 	       :trivial-shell
 	       :jonathan
 	       :xmls)
-  :serial t
   :components ((:module "src"
                 :components
                 ((:file "ontology")
-		 (:file "hozo")
+		 (:file "hozo" :depends-on ("ontology"))
+		 (:file "owl" :depends-on ("ontology"))
+		 (:file "rdf" :depends-on ("ontology"))
 		 (:file "module")
-		 (:file "photon"))))
+		 (:file "photon" :depends-on ("ontology" "hozo" "owl" "rdf" "module")))))
   :description "Ontology Based System Extenstion Framework"
   :long-description
   #.(with-open-file (stream (merge-pathnames

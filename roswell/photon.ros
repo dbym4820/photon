@@ -4,15 +4,93 @@
 exec ros -Q -- $0 "$@"
 |#
 (progn
-  (ros:ensure-asdf)
-  #+quicklisp
+  (ros:ensure-asdf)	
   (unless (find-package :photon)
-    (ql:quickload :photon :silent t)))
+    (ql:quickload '(photon) :silent t)))
 
 (defpackage #:ros.script.photon
-  (:use :cl :photon))
+  (:use :cl)
+  (:import-from :photon
+                :convert-ontology
+	        :concept-name
+	        :show-concepts
+	        :find-concept
+	        :show-attribute
+	       ))
 (in-package #:ros.script.photon)
 
+
+(defun help-sentence ()
+  "Usage: photon [option] ontology-file")
+
+(defun option-eq (option-arg correct-option-list)
+  (find option-arg correct-option-list :test #'string=))
+
 (defun main (&rest argv)
-  (declare (ignorable argv))
-  )
+  (let ((first-option (first argv))
+        (second-option (second argv))
+        (third-option (third argv))
+        (fourth-option (fourth argv)))
+    (declare (ignorable first-option second-option third-option fourth-option))
+    (cond ((option-eq first-option nil)
+	   ;; 引数なしのとき
+	   (format t "~A~%" (help-sentence)))
+	  ((option-eq first-option '("--help" "-h"))
+	   ;; ヘルプ
+	   (format t "~A~%" (help-sentence)))
+	  ((option-eq first-option '("--file" "-f"))
+	   ;; ファイルを指定してオントロジーの基本概念一覧を表示
+           (convert-ontology :file-path second-option)
+           (format t "~{~A~^, ~}~%" (remove "whole-root" (show-concepts) :test #'string=)))
+          ((option-eq first-option '("--all-concept" "-a"))
+	   ;; ファイルを指定せずにオントロジーの基本概念一覧を表示
+           (format t "~{~A~^, ~}~%" (show-concepts)))
+          ((option-eq first-option '("--list" "-l"))
+	   ;; ファイルを指定して，改行ありで基本概念一覧を表示
+	   (when second-option
+	     (convert-ontology :file-path second-option))
+           (format t "~{~A~%~}" (remove "whole-root" (show-concepts) :test #'string=)))
+	  ((option-eq first-option '("--child" "-c"))
+	   ;; 子概念の取得
+	   (when third-option
+	     (convert-ontology :file-path third-option))
+	   (let ((c (find-concept second-option)))
+	     (if c
+		 (format t "~{~A~%~}" (mapcar #'concept-name (show-attribute :children c)))
+		 (format t "~A~%" "None"))))
+	  ((option-eq first-option '("--parent" "-p"))
+	   ;; 親概念の取得
+	   (when third-option
+	     (convert-ontology :file-path third-option))
+	   (let ((c (find-concept second-option)))
+	     (if c
+		 (format t "~A~%" (concept-name (show-attribute :parent c)))
+		 (format t "~A~%" "None"))))
+	  ((option-eq first-option '("--attributes" "-r"))
+	   ;; 属性等の取得
+	   (when third-option
+	     (convert-ontology :file-path third-option))
+	   (let ((c (find-concept second-option)))
+	     (if c
+		 (format t (concatenate 'string
+					"Concept name:   '~A'~%"
+					"Property list:  ~{'~A'~^, ~}~%"
+					"Parent concept: '~A'~%"
+					"Child concepts: ~{'~A'~^, ~}~%")
+			 (show-attribute :role-name c)
+			 (mapcar #'(lambda (con)
+				     (concatenate 'string
+						  (concept-name con)
+						  "["
+						  (show-attribute :class-restriction con)
+						  "].("
+						  (format nil "~A" (show-attribute :cardinality con))
+						  ")"))
+				 (show-attribute :proper c))
+			 (concept-name (show-attribute :parent c))
+			 (mapcar #'concept-name (show-attribute :children c)))
+		 (format t "~A~%" "None"))))
+          (t
+	   ;; 入力ミス
+           (format t "~A~%" (help-sentence))))))
+

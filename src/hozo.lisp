@@ -4,23 +4,21 @@
   (:import-from :alexandria
                 :read-file-into-string)
   (:import-from :photon.ontology
+  		:*default-ontology*
+                :*default-ontology-file*
 		:make-concept
 		:find-concept
                 :clear-ontology
 		:add-concept
                 :append-concept
-		:show-concepts)
-  (:export :convert-ontology))
+		:show-concepts
+		:update-parent-child-concept)
+  (:export :convert-ontology-hozo))
 (in-package :photon.hozo)
 
 
-   ;;; オントロジー取得元のファイル
-(defparameter *default-ontology-file*
-  (concatenate 'string
-                      (namestring (asdf:system-source-directory 'photon)) "src/ontology/anime-ontology.xml"))
-
 #|
-オントロジーのXMLへのコンバート
+オントロジーのXMLからオブジェクトへのコンバート
 |#
 
 ;;; オントロジーファイルをXMLリストに変換
@@ -61,18 +59,18 @@
 ;;; 各Conceptのラベル（名前）リストを取得
 (defun get-concept-label (&optional (xml-file-path *default-ontology-file*))
   (mapcar #'(lambda (concept-tag-list)
-                    (second (let ((concept-info
-                                          (mapcar #'(lambda (tag-list)
-                                                        (when (tag-p "LABEL" tag-list)
-                                                              tag-list))
-                                                        concept-tag-list)))
-                              (remove-if #'null (second concept-info)))))
-            (get-concept-tags xml-file-path)))
+	      (second (let ((concept-info
+			      (mapcar #'(lambda (tag-list)
+					  (when (tag-p "LABEL" tag-list)
+					    tag-list))
+				      concept-tag-list)))
+			(remove-if #'null (second concept-info)))))
+	  (get-concept-tags xml-file-path)))
 
 ;;; 概念定義の先頭からの出現番号
 (defun get-concept-position-from-ahead (concept-name &optional (xml-file-path *default-ontology-file*))
   (position concept-name (get-concept-label xml-file-path) :test #'string=))
-  
+
 ;;; 特定概念の塊リストを取り出す
 (defun get-specific-concept-tags (concept-name &optional (xml-file-path *default-ontology-file*))
   (remove-if #'null
@@ -108,12 +106,12 @@
           (get-attribute-from-slot-tags concept-name "class_constraint" xml-file-path)
           (get-attribute-from-slot-tags concept-name "rh_name" xml-file-path)
           (get-attribute-from-slot-tags concept-name "num" xml-file-path)))
-       
+
 
 #|
 オントロジーのCLOSへのコンバート
 |#
-(defun convert-ontology (&key (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
+(defun convert-ontology-hozo (&key (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (if update
       (progn
         (clear-ontology ont)
@@ -127,14 +125,25 @@
 (defun convert-basic-concept (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
   (let ((c-list (get-concept-label xml-file-path)))
     (loop for c in c-list
-            do (add-concept c ont :concept-type :basic-concept)
-            finally (return
-                          (format nil "~A" (show-concepts ont))))))
+	  do (add-concept c ont :concept-type :basic-concept)
+	  finally (return
+		    (format nil "~A" (show-concepts ont))))))
 
 
 ;;; is-a関係の変換
 (defun convert-isa-relation (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
-  )
+  (loop for c in (show-concepts)
+	do (let ((parent-concept-label (or
+					(first (get-parent-concept c xml-file-path))
+					"whole-root"))
+		 (child-concept-labels (or (get-child-concept c xml-file-path)
+					   (list))))
+	     (update-parent-child-concept
+	      (find-concept c ont)
+	      (find-concept parent-concept-label ont)
+	      (mapcar #'(lambda (c2)
+			  (find-concept c2 ont))
+		      child-concept-labels)))))
 
 ;;; 部分/属性概念の変換
 (defun convert-part-attribute-concept (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
@@ -145,12 +154,41 @@
 				    (let ((role-name (princ-to-string (second (assoc "role" slot :test #'string=))))
 					  (class-const (princ-to-string (second (assoc "class_constraint" slot :test #'string=))))
 					  (rh-name (princ-to-string (second (assoc "rh_name" slot :test #'string=))))
-					  (cardinality (princ-to-string (second (assoc "num" slot :test #'string=)))))
+					  (cardinality (format nil "~A" (second (assoc "num" slot :test #'string=)))))
 				      (append-concept
 				       (make-concept role-name :c-type :part-of-concept
 				      			       :class-restriction class-const
 				      			       :cardinality cardinality
 				      			       :rh-name rh-name)
 				       (find-concept c ont)))))
-                         (get-slot-tags c))
+		     (get-slot-tags c))
           finally (format nil "~A" (show-concepts ont)))))
+
+;;; XMLリストから基本概念の親子関係を取得
+(defun get-child-parent (&optional (xml-file-path *default-ontology-file*))
+  (mapcar #'(lambda (child-parent-id-list)
+	      (let ((child-concept-label (second (first (first child-parent-id-list))))
+		    (parent-concept-label (second (second (first child-parent-id-list)))))
+	        (cons child-concept-label parent-concept-label)))
+	  (remove-if #'null
+		     (mapcar #'(lambda (tag-list)
+				 (when (string= (get-tag-name tag-list) "ISA")
+				   (cdr tag-list)))
+			     (get-w-concept-tags xml-file-path)))))
+
+;;; 親概念名を基に子概念を取得
+(defun get-child-concept (concept-name &optional (xml-file-path *default-ontology-file*))
+  (remove-if #'null
+	     (mapcar #'(lambda (child-parent)
+			 (when (string= (cdr child-parent) concept-name)
+			   (car child-parent)))
+		     (get-child-parent xml-file-path))))
+
+;;; 子概念名を基に親概念を取得
+(defun get-parent-concept (concept-name &optional (xml-file-path *default-ontology-file*))
+  (remove-if #'null
+	     (mapcar #'(lambda (child-parent)
+			 (when (string= (car child-parent) concept-name)
+			   (cdr child-parent)))
+		     (get-child-parent xml-file-path))))
+
