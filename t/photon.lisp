@@ -19,5 +19,4 @@
 (subtest "whole-root existence check"
   (is "whole-root" (photon:concept-name (photon:find-concept "whole-root"))))
 
-
 (finalize)
