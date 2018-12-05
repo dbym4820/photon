@@ -1,6 +1,6 @@
 # Photon: Ontology Based Syystem Extension Framework in Common Lisp 
 
-![](./static/img/photon-image.png)
+[![Build Status](https://travis-ci.org/dbym4820/photon.svg?branch=master)](https://travis-ci.org/dbym4820/photon)
 
 ## What is Photon
 
