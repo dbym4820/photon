@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<OE_FILE filename="v3.xml" ont_id="1481885440000ont" >
-<FILENAME_ONT>v3.xml</FILENAME_ONT>
+<OE_FILE filename="sample-ontology.xml" ont_id="1481885440000ont" >
+<FILENAME_ONT>sample-ontology.xml</FILENAME_ONT>
 <W_CONCEPTS>
-<CANVAS_SIZE w="14964" h="14376" x="860" y="516" />
+<CANVAS_SIZE w="14964" h="14376" x="248" y="507" />
 <CONCEPT id="1481885440000_n0" class_constraint="slot2" >
 <LABEL>Any</LABEL>
 <SUB_LABELS>
@@ -310,8 +310,7 @@
 <LABEL>男性キャラクター</LABEL>
 <SUB_LABELS>
 </SUB_LABELS>
-<POS x="470" y="1060"/>
-<PART_TREE>close</PART_TREE>
+<POS x="279" y="1137"/>
 <SLOTS>
 <SLOT id="1517584941000_s37" 
  type="OR"  label="slot2"  kind="a/o"  num="1"  role="性別"  class_constraint="男"  rh_name=""  value="" >
@@ -324,7 +323,7 @@
 </SLOTS>
 <RELATIONS>
 </RELATIONS>
-<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+<SUB_L label="" def="" role_name="" class_const="slot" rh_name ="" value ="" />
 </CONCEPT>
 <CONCEPT id="1517586489000_n38" class_constraint="slot" >
 <LABEL>実在物</LABEL>
@@ -477,7 +476,7 @@
 <PART_TREE>close</PART_TREE>
 <RELATIONS>
 </RELATIONS>
-<SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
+<SUB_L label="" def="" role_name="" class_const="slot" rh_name ="" value ="" />
 </CONCEPT>
 <CONCEPT id="1517590147000_n53" class_constraint="slot" >
 <LABEL>その他のキャラクター</LABEL>
@@ -743,7 +742,7 @@
 <LABEL>ラジオ</LABEL>
 <SUB_LABELS>
 </SUB_LABELS>
-<POS x="630" y="1240"/>
+<POS x="546" y="1274"/>
 <PART_TREE>close</PART_TREE>
 <RELATIONS>
 </RELATIONS>
@@ -1046,8 +1045,15 @@
 <LABEL>サイエンス・フィクション</LABEL>
 <SUB_LABELS>
 </SUB_LABELS>
-<POS x="400" y="880"/>
-<PART_TREE>close</PART_TREE>
+<POS x="429" y="865"/>
+<SLOTS>
+<SLOT id="1551782268000_s117" 
+ type="NW"  label="slot"  kind="p/o"  num="1.."  role="登場人物Role"  class_constraint="キャラクター"  rh_name=""  value="" >
+<SUB_LABELS>
+</SUB_LABELS>
+<SUB_L label="" def="" role_name="" class_const="キャラクター" rh_name ="" value ="" />
+</SLOT>
+</SLOTS>
 <RELATIONS>
 </RELATIONS>
 <SUB_L label="" def="" role_name="" class_const="" rh_name ="" value ="" />
@@ -1999,7 +2005,7 @@
 <ISA id="1551622807000_isa332" parent="アニメ映画" child="となりのトトロ" />
 </W_CONCEPTS>
 <R_CONCEPTS>
-<CANVAS_SIZE w="23718" h="21752" />
+<CANVAS_SIZE w="25919" h="23657" />
 </R_CONCEPTS>
 <PRINTER>
 <PAGE_SETTINGS header="true" footer="true" cropmarks="true" scale="100" />

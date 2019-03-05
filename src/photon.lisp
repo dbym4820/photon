@@ -12,9 +12,11 @@
                 :*default-ontology-file*
 
                 :concept-name
+		:class-restriction
 		:property-list
 	        :child-concept-list
 		:instantiation
+		:val
                 :parent-concept
 
                 :make-ontology
@@ -29,13 +31,14 @@
 		:find-concept
                 :find-attribute
 		:show-attribute
-                :get-restricted-concept
-
+                :get-restricted-concepts
+		
 		:same-concept-p
                 :ancestor-list
 		:ancestor-p
                 :parent-p
-		
+
+                :get-concept-type		
 		:update-parent-child-concept)
   (:export :convert-ontology
            :set-default-ontology
@@ -49,12 +52,13 @@
            :find-concept
 	   :find-attribute
            :show-attribute
-	   :get-restricted-concept
+           :get-restricted-concepts
 
            :concept-name
 	   :property-list
 	   :child-concept-list
 	   :instantiation
+	   :val
 	   :parent-concept
            :role-name
 	   :class-restriction
@@ -69,6 +73,8 @@
 	   :ancestor-list
 	   :ancestor-p
 	   :parent-p
+
+	   :get-concept-type
 	   ))
 (in-package :photon)
 
@@ -81,6 +87,3 @@
     (:owl (convert-ontology-owl))
     (:rdf (convert-ontology-rdf))
     (otherwise (convert-ontology-hozo))))
-
-(convert-ontology)
-
