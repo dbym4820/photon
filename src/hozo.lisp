@@ -12,6 +12,9 @@
 		:add-concept
                 :append-concept
 		:show-concepts
+		
+		:instantiation
+
 		:update-parent-child-concept)
   (:export :convert-ontology-hozo))
 (in-package :photon.hozo)
@@ -23,7 +26,7 @@
 ;;; オントロジーファイルをXMLリストに変換
 (defun convert-ontology-xml (file-path)
   (setf *default-ontology-file* file-path)
-  (xmls:parse (read-file-into-string file-path) :compress-whitespace t))
+  (xmls:parse-to-list (read-file-into-string file-path) :compress-whitespace t))
 
 ;;; ファイル名の取得
 (defun get-expected-file-name-tags (&optional (xml-file-path *default-ontology-file*))
@@ -85,6 +88,10 @@
 				  (when (tag-p "SLOTS" concept-tag) t))
 			      (get-specific-concept-tags concept-name xml-file-path)))))
 
+;;; 概念がインスタンスであるか否かを取得
+(defun instance-concept-p (concept &optional (xml-file-path *default-ontology-file*))
+  (equalp "true" (second (assoc "instantiation" (car (get-specific-concept-tags concept xml-file-path)) :test #'equalp))))
+
 ;;; 指定基本概念のスロット内の1属性を抽出
 (defun get-attribute-from-slot-tags (concept-name attribute &optional (xml-file-path *default-ontology-file*))
   (let ((concept-tags (get-concept-slot-tags concept-name xml-file-path)))
@@ -93,9 +100,9 @@
                             (when (tag-p attribute attr)
                               t))
                         (second att))))
-      (mapcar #'(lambda (slot-tag)
-                  (tmp-func slot-tag))
-              concept-tags))))
+       (mapcar #'(lambda (slot-tag)
+		   (tmp-func slot-tag))
+	       concept-tags))))
 
 ;;; 指定された基本概念が持つスロット情報を取得
 (defun get-slot-tags (concept-name &optional (xml-file-path *default-ontology-file*))
@@ -117,6 +124,7 @@
         (convert-basic-concept file-path ont)
         (convert-isa-relation file-path ont)
         (convert-part-attribute-concept file-path ont)
+	(convert-instantiation file-path ont)
         (show-concepts ont))
       file-path))
 
@@ -143,6 +151,12 @@
 	      (mapcar #'(lambda (c2)
 			  (find-concept c2 ont))
 		      child-concept-labels)))))
+
+;;; instanceかどうかをチェック
+(defun convert-instantiation (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
+  (loop for c in (remove-if #'(lambda (c-s) (string= c-s "whole-root")) (show-concepts))
+	do (setf (instantiation (find-concept c ont))
+		 (instance-concept-p c xml-file-path))))
 
 ;;; 部分/属性概念の変換
 (defun convert-part-attribute-concept (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))

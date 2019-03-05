@@ -4,7 +4,7 @@
 (in-package :photon-asd)
 
 (defsystem photon
-  :version "0.1.1"
+  :version "0.2.0"
   :author "Tomoki ABURATANI"
   :license "MIT"
   :homepage "https://github.com/dbym4820/photon"

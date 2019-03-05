@@ -10,32 +10,66 @@
   (:import-from :photon.ontology
   		:*default-ontology*
                 :*default-ontology-file*
-		:concept-name
+
+                :concept-name
+		:property-list
+	        :child-concept-list
+		:instantiation
+                :parent-concept
+
                 :make-ontology
 		:make-concept
                 :add-concept
 		:append-concept
                 :clear-ontology
-		:show-concepts
-		:describe-all-info
-                :find-concept
-		:find-attribute
-                :show-attribute
+
+                :show-concepts
+		:show-all-class-concept
+                :show-all-instance
+		:find-concept
+                :find-attribute
+		:show-attribute
+                :get-restricted-concept
+
+		:same-concept-p
+                :ancestor-list
+		:ancestor-p
+                :parent-p
+		
 		:update-parent-child-concept)
   (:export :convert-ontology
            :set-default-ontology
-	   :concept-name
 	   :make-concept
 	   :make-ontology
 	   :add-concept
-	   :show-concepts
-           :describe-all-info
-	   :find-concept
+
+           :show-concepts
+	   :show-all-class-concept
+	   :show-all-instance
+           :find-concept
+	   :find-attribute
+           :show-attribute
+	   :get-restricted-concept
+
+           :concept-name
+	   :property-list
+	   :child-concept-list
+	   :instantiation
+	   :parent-concept
+           :role-name
+	   :class-restriction
+	   :role-holder
+	   :cardinality
+	   :concept-type
+
            :append-concept
            :clear-ontology
-           :find-attribute
-           :show-attribute
-	   :concept-inherit-p))
+
+           :same-concept-p
+	   :ancestor-list
+	   :ancestor-p
+	   :parent-p
+	   ))
 (in-package :photon)
 
 #|

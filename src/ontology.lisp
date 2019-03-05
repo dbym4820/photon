@@ -4,25 +4,47 @@
   (:export :*default-ontology*
            :*default-ontology-file*
 	   :set-default-ontology
+
 	   :concept-name
+	   :property-list
+	   :child-concept-list
+	   :instantiation
+	   :parent-concept
+
+	   :role-name
+	   :class-restriction
+	   :role-holder
+	   :cardinality
+	   :concept-type
+
 	   :make-ontology
            :make-concept
            :add-concept
            :append-concept
            :clear-ontology
+
            :show-concepts
-	   :describe-all-info
-           :find-concept
+	   :show-all-class-concept
+	   :show-all-instance
+	   :find-concept
            :find-attribute
            :show-attribute
-	   :update-parent-child-concept))
+	   :get-restricted-concept
+
+	   :update-parent-child-concept
+
+	   :same-concept-p
+	   :ancestor-list
+	   :ancestor-p
+	   :parent-p
+	   ))
 (in-package :photon.ontology)
 
 ;;; オントロジー取得元のファイル
 (defparameter *default-ontology-file*
   (concatenate 'string
 	       (namestring (asdf:system-source-directory 'photon))
-	       "src/ontology/anime-ontology.xml"))
+	       "src/ontology/sample-ontology.xml"))
 
 ;;; 取得元オントロジーファイル設定
 (defun set-default-ontology (file-path-string)
@@ -34,15 +56,11 @@
 (defclass concept ()
   ((concept-name :initform "any" :initarg :name :accessor concept-name)))
 
-(defclass instance-concept (concept)
-  ((property-list :initform nil :initarg :property :accessor property-list)
-   (class-concept :initform nil :initarg :class-concept :accessor class-concept)))
-  
-
 (defclass basic-concept (concept)
   ((property-list :initform nil :initarg :property :accessor property-list)
    (parent-concept :initform nil :initarg :parent-concept :accessor parent-concept)
-   (child-concept-list :initform nil :initarg :child-concept-list :accessor child-concept-list)))
+   (child-concept-list :initform nil :initarg :child-concept-list :accessor child-concept-list)
+   (instantiation :initform nil :initarg :instantiation :accessor instantiation)))
 
 (defclass non-basic-concept (concept)
   ((role-name :initform "new" :initarg :name :accessor concept-name)
@@ -67,6 +85,7 @@
 (defclass ontology ()
   ((theme :initform "any" :initarg :ontology-theme :reader theme)
    (concept-list :initform `(,(make-instance 'basic-concept :name "whole-root")) :accessor concept-list)))
+
 
 #|
 オントロジー定義の操作に関するメソッド群
@@ -143,84 +162,130 @@
 #|
 CLOSオントロジー操作用API
 |#
-
 ;;; オントロジーの中身表示
 (defun show-ontology (&optional (ont *default-ontology*))
   (concept-list ont))
 
-;;; オントロジーの中身（ラベル）表示
 (defun show-concepts (&optional (ont *default-ontology*))
+  "オントロジーの中身（ラベル）をすべて表示"
   (mapcar #'concept-name (show-ontology ont)))
+
+(defun show-all-class-concept (&optional (ont *default-ontology*))
+  "インスタンスではない概念の検索"
+  (mapcar #'concept-name
+	  (remove-if #'instantiation
+		     (mapcar #'(lambda (c)
+				 (find-concept c ont))
+			     (show-concepts)))))
+
+(defun show-all-instance (&optional (ont *default-ontology*))
+  "インスタンスの検索"
+  (mapcar #'concept-name
+	  (remove-if-not #'instantiation
+			 (mapcar #'(lambda (c)
+				     (find-concept c ont))
+				 (show-concepts)))))
 
 ;;; 基本概念の追加
 (defun add-concept (concept-name &optional (ont *default-ontology*) &key (concept-type :basic-concept))
   (declare (ignorable concept-type))
   (append-concept (make-concept concept-name) ont))
 
+#|
+オントロジー検索用API
+|#
 ;;; オントロジーの検索
 (defun find-concept (concept-name &optional (ont *default-ontology*))
   (find-if #'(lambda (c)
 	       (when (string= concept-name (concept-name c)) t))
 	   (show-ontology ont)))
 
-;;; 基本概念の属性検索
-(defun find-attribute ())
 
 ;;; CLOSオントロジーの各パラメータを文字列として表示
-(defun show-attribute (attribute concept)
-  (if (null concept) nil
-      (let ((return-value
-	      (cond ((eql attribute :proper)
-		     (property-list concept))
-		    ((eql attribute :role-name)
-		     (concept-name concept))
-		    ((eql attribute :class-restriction)
-		     (class-restriction concept))
-		    ((eql attribute :cardinality)
-		     (cardinality concept))
-		    ((eql attribute :concept-type)
-		     (concept-type concept))
-		    ((eql attribute :parent)
-		     (parent-concept concept))
-		    ((eql attribute :children)
-		     (child-concept-list concept))
-		    (t
-		     nil))))
-	(cond ((listp return-value)
-	       (remove-if #'null return-value))
-	      (t
-	       return-value)))))
+(defgeneric show-attributes (concept &key))
+(defmethod show-attribute ((concept concept) &key (ont *default-ontology*))
+  (declare (ignorable ont))
+  (format nil
+	  (concatenate 'string
+		       "Included properties: ~A~%"
+		       "Role name: ~A~%"
+		       "Class restriction: ~A~%"
+		       "Cardinalities: ~A~%"
+		       "Parent concept: ~A~%"
+		       "Child concepts: ~A~%")
+	  (property-list concept)
+	  (concept-name concept)
+	  (class-restriction concept)
+	  (cardinality concept)
+	  (parent-concept concept)
+	  (child-concept-list concept)))
+(defmethod show-attribute ((concept string) &key (ont *default-ontology*))
+  (declare (ignorable ont))
+  (let ((concept-object (find-concept concept)))
+    (unless concept-object
+      (format nil
+	      (concatenate 'string
+			   "Included properties: ~A~%"
+			   "Role name: ~A~%"
+			   "Class restriction: ~A~%"
+			   "Cardinalities: ~A~%"
+			   "Parent concept: ~A~%"
+			   "Child concepts: ~A~%")
+	      (mapcar #'(lambda (c)
+			  (unless c
+			    (concept-name c)))
+		      (property-list concept-object))
+	      (concept-name concept-object)
+	      (class-restriction concept-object)
+	      (cardinality concept-object)
+	      (parent-concept concept-object)
+	      (child-concept-list concept-object)))))
 
-;;; 概念オブジェクトの有する表示可能なすべての情報を文字列で表示
-(defgeneric describe-all-info (concept))
-(defmethod describe-all-info ((concept basic-concept))
-  (concatenate 'string
-	       "概念名:" (show-attribute :role-name concept)
-	       "\n属性リスト" (show-attribute :proper concept)))
-(defmethod describe-all-info ((concept attribute-concept))
-  (concatenate 'string
-	       "ロール概念名：" (show-attribute :role-name concept)
-	       "クラス制約：" ""))
+#|
+概念の関係性検索に関する関数群
+|#
+
+;;; 第1引数と第2っ引数の概念が同じ概念かどうかを評価
+(defgeneric same-concept-p (concept1 concept2)
+  (:method ((concept1 concept) (concept2 concept))
+      (eq concept1 concept2)))
+
+;;; 第1引数の概念が第2引数の概念の子概念かどうかを判定
+(defgeneric parent-p (concept1 concept2))
+(defmethod parent-p ((parent-candidate concept) (child-candidate concept))
+  (eq (parent-concept child-candidate) parent-candidate))
+(defmethod parent-p ((parent-candidate-string string) (child-candidate-string string))
+  (let ((parent-concept (find-concept parent-candidate-string))
+	(child-concept (find-concept child-candidate-string)))
+    (eq parent-concept (parent-concept child-concept))))
+
+;;; 継承系列に属する先祖概念をリスト
+(defun ancestor-list (concept &optional acc)
+  (cond ((null concept) concept)
+	((eq (parent-concept concept) (find-concept "whole-root")) (append acc (list concept)))
+	(t
+	 (ancestor-list (parent-concept concept) (append acc (list concept))))))
+
+;;; 第1引数の概念が第2引数の概念の先祖概念であるかを評価
+(defgeneric ancestor-p (concept1 concept2))
+(defmethod ancestor-p ((ancestor-candidate concept) (descendant-candidate concept))
+  (when (find ancestor-candidate (ancestor-list descendant-candidate))
+    t))
+(defmethod ancestor-p ((ancestor-candidate string) (descendant-candidate string))
+  (when (find (find-concept ancestor-candidate)
+	      (ancestor-list (find-concept descendant-candidate)))
+    t))
 
 
-;;; 第１引数として与えた基本概念が第２引数として与えた基本概念の下位概念かを調べる述語（継承関係の有無を調べる）
-;;; 後にCLOSクラスを引数として取るメソッドに変更
-(defgeneric concept-inherit-p (source-concept target-concept &key))
-(defmethod concept-inherit-p ((source-concept basic-concept) (target-concept basic-concept) &key (ont *default-ontology*))
-  (labels ((rec-pred (sou)
-	     (cond ((null sou) nil)
-		   ((string= (concept-name sou) (concept-name target-concept)) t)
-		   (t (rec-pred (find-concept (show-attribute :parent sou)))))))
-    (rec-pred source-concept)))
 
 
 (defun get-all-part-concept-restriction-and-role ()
   "全ての基本概念について部分概念を取り出し，それらのクラス制約とロール概念名を取得する"
   (mapcar #'(lambda (d)
 	      (cons d (get-part-concepts-role-rest d)))
-	  (dusque.ontology:show-concepts)))
+	  (show-concepts)))
 
-(defun get-concept-which-has-class-restriction (class-restriction)
+(defun get-restricted-concept (class-restriction)
   "特定のクラス制約を持つ部分概念を備えた基本概念を取得する"
   (let* ((c-list (get-part-concept-info))
 	 (c-list-which-has-part-concept
@@ -236,3 +301,4 @@ CLOSオントロジー操作用API
 						    (cdr d1))))
 			       c-list
 			       c-list-which-has-part-concept)))))
+	
