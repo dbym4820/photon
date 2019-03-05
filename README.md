@@ -30,7 +30,63 @@ $ echo "export PATH='$(HOME)/.roswell/bin':$PATH" >> ~/.profile
 
 ## Usage
 
-### As Roswell script
+### Make ontology file
+
+- please use 法造(Hozo) - a ontology editor made by Osaka University
+- download from [here](http://www.hozo.jp/download_en.html)
+
+### Common Lisp library
+
+- load library
+
+```
+CL-USER> (ql:quickload :photon)
+```
+
+- convert xml-formed concepts to CLOS
+
+```
+# Default ontology file will be read if you omit xml-file-path
+CL-USER> (photon:convert-concept "/path/to/xml")
+("whole-root" ....)
+```
+
+- show all concepts
+
+```
+CL-USER> (photon:show-concepts)
+("whole-root" ....)
+```
+
+- show all concepts (except for instance concepts)
+
+```
+CL-USER> (photon:show-all-class-concept)
+("whole-root" ....)
+```
+
+- show all instance concepts
+
+```
+CL-USER> (photon:show-all-instance)
+("some instance" ....)
+```
+
+- get CLOS concept object
+
+```
+CL-USER> (photon:find-concept "concept-label")
+#<PHOTON.ONTOLOGY::BASIC-CONCEPT #x302001FB00FD>
+```
+
+- get concept objects' properties(e.g. concept-label)
+
+```
+CL-USER> (photon:concept-name (photon:parent-concept (photon:find-concept "concept-label")))
+#<PHOTON.ONTOLOGY::BASIC-CONCEPT #x302001FB015D>
+```
+
+### Roswell script
 
 - show all concepts (--file or -f option)
 
@@ -77,10 +133,6 @@ Property list:  '作品名[string].(1..)', '放送年度[年度].(1..)', '流通
 Parent concept: '実在物'
 Child concepts: 'TVアニメ', 'アニメ映画', 'Webアニメ'
 ```
-
-### As Common Lisp library
-
-In preparation
 
 
 ## Copyright
