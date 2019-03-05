@@ -16,7 +16,6 @@
   (:export :convert-ontology-hozo))
 (in-package :photon.hozo)
 
-
 #|
 オントロジーのXMLからオブジェクトへのコンバート
 |#

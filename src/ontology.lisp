@@ -11,6 +11,7 @@
            :append-concept
            :clear-ontology
            :show-concepts
+	   :describe-all-info
            :find-concept
            :find-attribute
            :show-attribute
@@ -32,6 +33,11 @@
 |#
 (defclass concept ()
   ((concept-name :initform "any" :initarg :name :accessor concept-name)))
+
+(defclass instance-concept (concept)
+  ((property-list :initform nil :initarg :property :accessor property-list)
+   (class-concept :initform nil :initarg :class-concept :accessor class-concept)))
+  
 
 (defclass basic-concept (concept)
   ((property-list :initform nil :initarg :property :accessor property-list)
@@ -185,6 +191,18 @@ CLOSオントロジー操作用API
 	      (t
 	       return-value)))))
 
+;;; 概念オブジェクトの有する表示可能なすべての情報を文字列で表示
+(defgeneric describe-all-info (concept))
+(defmethod describe-all-info ((concept basic-concept))
+  (concatenate 'string
+	       "概念名:" (show-attribute :role-name concept)
+	       "\n属性リスト" (show-attribute :proper concept)))
+(defmethod describe-all-info ((concept attribute-concept))
+  (concatenate 'string
+	       "ロール概念名：" (show-attribute :role-name concept)
+	       "クラス制約：" ""))
+
+
 ;;; 第１引数として与えた基本概念が第２引数として与えた基本概念の下位概念かを調べる述語（継承関係の有無を調べる）
 ;;; 後にCLOSクラスを引数として取るメソッドに変更
 (defgeneric concept-inherit-p (source-concept target-concept &key))
@@ -194,3 +212,27 @@ CLOSオントロジー操作用API
 		   ((string= (concept-name sou) (concept-name target-concept)) t)
 		   (t (rec-pred (find-concept (show-attribute :parent sou)))))))
     (rec-pred source-concept)))
+
+
+(defun get-all-part-concept-restriction-and-role ()
+  "全ての基本概念について部分概念を取り出し，それらのクラス制約とロール概念名を取得する"
+  (mapcar #'(lambda (d)
+	      (cons d (get-part-concepts-role-rest d)))
+	  (dusque.ontology:show-concepts)))
+
+(defun get-concept-which-has-class-restriction (class-restriction)
+  "特定のクラス制約を持つ部分概念を備えた基本概念を取得する"
+  (let* ((c-list (get-part-concept-info))
+	 (c-list-which-has-part-concept
+	   (mapcar #'cdr c-list)))
+    (remove-if #'null
+	       (mapcar #'car 
+		       (mapcar #'(lambda (d1 d2)
+				   (when d2 (mapcar #'(lambda (d3)
+							(when (string=
+							       class-restriction
+							       (cdr d3))
+							  d1))
+						    (cdr d1))))
+			       c-list
+			       c-list-which-has-part-concept)))))

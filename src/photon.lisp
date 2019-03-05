@@ -17,6 +17,7 @@
 		:append-concept
                 :clear-ontology
 		:show-concepts
+		:describe-all-info
                 :find-concept
 		:find-attribute
                 :show-attribute
@@ -28,6 +29,7 @@
 	   :make-ontology
 	   :add-concept
 	   :show-concepts
+           :describe-all-info
 	   :find-concept
            :append-concept
            :clear-ontology
