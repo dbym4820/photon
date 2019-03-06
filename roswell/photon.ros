@@ -18,6 +18,7 @@ exec ros -Q -- $0 "$@"
 	        :show-attribute
 		:list-ontology
 		:init
+		:set-ontology
 	       ))
 (in-package #:ros.script.photon)
 
@@ -40,6 +41,11 @@ exec ros -Q -- $0 "$@"
 	  ((option-eq first-option '("--list-ontology" "-lo"))
 	   ;; オントロジーのリスト表示
 	   (format t "~{~A~%~}" (list-ontology)))
+	  ((option-eq first-option '("--init" "-i"))
+	   (init))
+	  ((option-eq first-option '("--register-ontology" "-r"))
+	   ;; オントロジーの登録
+	   (set-ontology second-option))
 	  ((option-eq first-option '("--help" "-h"))
 	   ;; ヘルプ
 	   (format t "~A~%" (help-sentence)))
