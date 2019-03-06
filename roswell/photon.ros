@@ -16,6 +16,8 @@ exec ros -Q -- $0 "$@"
 	        :show-concepts
 	        :find-concept
 	        :show-attribute
+		:list-ontology
+		:init
 	       ))
 (in-package #:ros.script.photon)
 
@@ -35,6 +37,9 @@ exec ros -Q -- $0 "$@"
     (cond ((option-eq first-option nil)
 	   ;; 引数なしのとき
 	   (format t "~A~%" (help-sentence)))
+	  ((option-eq first-option '("--list-ontology" "-lo"))
+	   ;; オントロジーのリスト表示
+	   (format t "~{~A~%~}" (list-ontology)))
 	  ((option-eq first-option '("--help" "-h"))
 	   ;; ヘルプ
 	   (format t "~A~%" (help-sentence)))
@@ -45,51 +50,12 @@ exec ros -Q -- $0 "$@"
           ((option-eq first-option '("--all-concept" "-a"))
 	   ;; ファイルを指定せずにオントロジーの基本概念一覧を表示
            (format t "~{~A~^, ~}~%" (show-concepts)))
-          ((option-eq first-option '("--list" "-l"))
+          ((option-eq first-option '("--list-concept" "-lc"))
 	   ;; ファイルを指定して，改行ありで基本概念一覧を表示
 	   (when second-option
 	     (convert-ontology :file-path second-option))
            (format t "~{~A~%~}" (remove "whole-root" (show-concepts) :test #'string=)))
 	  ((option-eq first-option '("--child" "-c"))
-	   ;; 子概念の取得
-	   (when third-option
-	     (convert-ontology :file-path third-option))
-	   (let ((c (find-concept second-option)))
-	     (if c
-		 (format t "~{~A~%~}" (mapcar #'concept-name (show-attribute :children c)))
-		 (format t "~A~%" "None"))))
-	  ((option-eq first-option '("--parent" "-p"))
-	   ;; 親概念の取得
-	   (when third-option
-	     (convert-ontology :file-path third-option))
-	   (let ((c (find-concept second-option)))
-	     (if c
-		 (format t "~A~%" (concept-name (show-attribute :parent c)))
-		 (format t "~A~%" "None"))))
-	  ((option-eq first-option '("--attributes" "-r"))
-	   ;; 属性等の取得
-	   (when third-option
-	     (convert-ontology :file-path third-option))
-	   (let ((c (find-concept second-option)))
-	     (if c
-		 (format t (concatenate 'string
-					"Concept name:   '~A'~%"
-					"Property list:  ~{'~A'~^, ~}~%"
-					"Parent concept: '~A'~%"
-					"Child concepts: ~{'~A'~^, ~}~%")
-			 (show-attribute :role-name c)
-			 (mapcar #'(lambda (con)
-				     (concatenate 'string
-						  (concept-name con)
-						  "["
-						  (show-attribute :class-restriction con)
-						  "].("
-						  (format nil "~A" (show-attribute :cardinality con))
-						  ")"))
-				 (show-attribute :proper c))
-			 (concept-name (show-attribute :parent c))
-			 (mapcar #'concept-name (show-attribute :children c)))
-		 (format t "~A~%" "None"))))
           (t
 	   ;; 入力ミス
            (format t "~A~%" (help-sentence))))))
