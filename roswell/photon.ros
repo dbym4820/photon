@@ -56,7 +56,7 @@ exec ros -Q -- $0 "$@"
 	     (convert-ontology :file-path second-option))
            (format t "~{~A~%~}" (remove "whole-root" (show-concepts) :test #'string=)))
 	  ((option-eq first-option '("--child" "-c"))
+	   (format t "~A~%" (help-sentence)))
           (t
 	   ;; 入力ミス
            (format t "~A~%" (help-sentence))))))
-
