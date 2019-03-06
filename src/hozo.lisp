@@ -131,7 +131,7 @@
 	(format t "Converting Instance concepts...~%")
 	(convert-instantiation file-path ont)
 	(format t "Finalize...~%")
-        (format t "~{~A~^ ~}~%" (show-concepts ont)))
+        (format t "~t~t Converted Concepts~%~t~t~t * ~{~A~^ ~}~%~%" (show-concepts ont)))
       file-path))
 
 ;;; 基本概念の変換
@@ -168,20 +168,20 @@
 (defun convert-part-attribute-concept (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
   (let ((c-list (get-concept-label xml-file-path)))
     (loop for c in c-list ;; c mean anime title string
-          do (map 'list #'(lambda (slot)
-			    (remove-if #'null
-				       (let ((role-name (princ-to-string (second (assoc "role" slot :test #'string=))))
-					     (class-const (princ-to-string (second (assoc "class_constraint" slot :test #'string=))))
-					     (rh-name (princ-to-string (second (assoc "rh_name" slot :test #'string=))))
-					     (cardinality (format nil "~A" (second (assoc "num" slot :test #'string=))))
-					     (val (format nil "~A" (second (assoc "value" slot :test #'string=)))))
-					 (append-concept
-					  (make-concept role-name :c-type :part-of-concept
-								  :class-restriction class-const
-								  :cardinality cardinality
-								  :rh-name rh-name
-								  :val val)
-					  (find-concept c ont)))))
+          do (mapcar #'(lambda (slot)
+			 (remove-if #'null
+				    (let ((role-name (princ-to-string (second (assoc "role" slot :test #'string=))))
+					  (class-const (princ-to-string (second (assoc "class_constraint" slot :test #'string=))))
+					  (rh-name (princ-to-string (second (assoc "rh_name" slot :test #'string=))))
+					  (cardinality (format nil "~A" (second (assoc "num" slot :test #'string=))))
+					  (val (format nil "~A" (second (assoc "value" slot :test #'string=)))))
+				      (append-concept
+				       (make-concept role-name :c-type :part-of-concept
+							       :class-restriction class-const
+							       :cardinality cardinality
+							       :rh-name rh-name
+							       :val val)
+				       (find-concept c ont)))))
 		  (get-slot-tags c))
           finally (format nil "~A" (show-concepts ont)))))
 

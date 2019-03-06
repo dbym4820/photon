@@ -9,14 +9,15 @@
 
 (plan 3)
 
-(subtest "convert-test"
-  (ok (not (not (photon:convert-ontology)))))
+(subtest "photon initialize"
+  (ok (not (photon:init))))
 
 (subtest "basic-concept check"
-  (loop for c in (photon:show-concepts)
-	do (is-type (photon:find-concept c) 'photon.ontology::basic-concept)))
+  (mapcar #'(lambda (c)
+	      (is-type (find-concept c) 'photon.ontology::basic-concept))
+	  (show-concepts)))
 
 (subtest "whole-root existence check"
-  (is "whole-root" (photon:concept-name (photon:find-concept "whole-root"))))
+  (is (photon:concept-name (photon:find-concept "whole-root")) "whole-root"))
 
 (finalize)
