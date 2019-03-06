@@ -101,7 +101,7 @@
 
 
 (defun init (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
-  (init)
+  (photon-env-init)
   (convert-ontology :ontology-type ontology-type :file-path file-path :ont ont :update update)
   (format t "Initialize completed!"))
   
