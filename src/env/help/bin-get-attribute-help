@@ -1,0 +1,6 @@
+project name and attribute name as option-values are required
+
+Usage:
+  utsushiyo --g project-name attribute
+  utsushiyo --get-project project-name attribute
+  utsushiyo get-project project-name attribute

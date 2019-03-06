@@ -1,0 +1,11 @@
+project name as option-value is required
+
+Usage (for getting specify project's help):
+  utsushiyo -h project-name command
+  utsushiyo --help project-name command
+  utsushiyo help project-name command
+
+Usage (for getting utsushiyo's help):
+  utsushiyo -h
+  utsushiyo --help
+  utsushiyo help

@@ -1,0 +1,6 @@
+project name, attribute name and attribute content as option-values are required
+
+Usage:
+  utsushiyo --s project-name attribute content
+  utsushiyo --set-project project-name attribute content
+  utsushiyo set-project project-name attribute content

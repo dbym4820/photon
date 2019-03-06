@@ -1,0 +1,6 @@
+project name as option-value is required
+
+Usage:
+  utsushiyo --i project-name
+  utsushiyo --init project-name
+  utsushiyo init project-name

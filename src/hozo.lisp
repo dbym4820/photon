@@ -122,10 +122,15 @@
   (if update
       (progn
         (clear-ontology ont)
+	(format t "Converting Basic concepts...~%")
         (convert-basic-concept file-path ont)
+	(format t "Converting IS-A relations...~%")
         (convert-isa-relation file-path ont)
+	(format t "Converting Part/Attribute concepts...~%")
         (convert-part-attribute-concept file-path ont)
+	(format t "Converting Instance concepts...~%")
 	(convert-instantiation file-path ont)
+	(format t "Finalize...~%")
         (show-concepts ont))
       file-path))
 
