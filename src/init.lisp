@@ -161,7 +161,7 @@ Initialization
 (defun photon-env-init ()
   (format t "Initialize photon home directory: ~A ...~%" +photon-user-directory+)
   (make-directory +photon-user-directory+)
-  (make-directory +photon-project-ontology-directory+)
+  (make-directory +photon-user-ontology-directory+)
   (copy-directory
    +photon-project-env-directory+
    +photon-user-directory+)
@@ -171,3 +171,4 @@ Initialization
 		"sample-ontology.xml")
    :overwrite t)
   (format t "Default ontology has registered as below... ~%~{~t~t * ~A~^~%~}~%" (list-ontology)))
+
