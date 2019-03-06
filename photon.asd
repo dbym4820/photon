@@ -16,6 +16,8 @@
                :bordeaux-threads
 	       :dexador
 	       :trivial-shell
+	       :split-sequence
+	       :cl-project
 	       :jonathan
 	       :xmls)
   :components ((:module "src"
@@ -25,6 +27,7 @@
 		 (:file "owl" :depends-on ("ontology"))
 		 (:file "rdf" :depends-on ("ontology"))
 		 (:file "module")
+		 (:file "init")
 		 (:file "photon" :depends-on ("ontology" "hozo" "owl" "rdf" "module")))))
   :description "Ontology Based System Extenstion Framework"
   :long-description
