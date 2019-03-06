@@ -131,7 +131,7 @@
 	(format t "Converting Instance concepts...~%")
 	(convert-instantiation file-path ont)
 	(format t "Finalize...~%")
-        (show-concepts ont))
+        (format t "~{~A~^ ~}~%" (show-concepts ont)))
       file-path))
 
 ;;; 基本概念の変換
