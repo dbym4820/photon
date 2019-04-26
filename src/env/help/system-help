@@ -1,0 +1,14 @@
+Ontology based System Extension Framework
+
+Usage:
+   photon Command [arguments...]
+
+commands:
+   init		Initialize local environments for photon.
+   install      Install a given ontology for photon environment.
+   update	Update installed ontology. (Not implemented)
+   add		Add local ontology into photon environment.
+   list		List registered ontologies.
+   show		Show all concepts included in a given ontology.
+   version	Show the photon version information.
+   help		Show this help message.

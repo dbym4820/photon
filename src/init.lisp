@@ -26,6 +26,11 @@
 	   :get-env
 	   :get-config
 	   :get-help
+	   :get-result
+
+	   :set-config
+	   :set-env
+	   :set-result
 	   :set-ontology
 	   :list-ontology))
 (in-package :photon.init)
@@ -47,7 +52,7 @@ Constant valiables
 (defvar +photon-project-env-directory+
   (namestring (directory-namestring (asdf:system-relative-pathname "photon" "src/env/"))))
 (defvar +photon-project-ontology-directory+
-  (namestring (directory-namestring (asdf:system-relative-pathname "photon" "src/ontology/"))))
+  (namestring (directory-namestring (asdf:system-relative-pathname "photon" "src/ontology/ontology/"))))
 
 #|
 Directory utilities
@@ -97,6 +102,8 @@ Attribute utilities
 	(read-file-into-string f-name)
 	"")))
 
+;; (set-attribute "user/user-name" "tomoki")
+;; (set-attribute "user/user-name" "tomoki")
 (defun set-attribute (attribute-name attribute-content)
   (let ((f-name (concatenate 'string
 			     +photon-user-directory+
@@ -104,7 +111,8 @@ Attribute utilities
     (with-open-file (file-var f-name :direction :output
 				     :if-exists :overwrite
 				     :if-does-not-exist :create)
-      (write-line attribute-content file-var))))
+      (write-string
+       attribute-content file-var))))
 
 #|
 Help utilities
@@ -121,6 +129,19 @@ Help utilities
 		       command-name))))
      (setf *package* package)))
 
+(defmacro defsetter (getter-name-symbol attribute-type-name)
+  `(let* ((package *package*)
+	  (*package* (find-package :photon.init)))
+     (defgeneric ,getter-name-symbol (command-name attribute-value)
+       (:method ((command-name string) (attribute-value string))
+	 (set-attribute
+	  (concatenate 'string
+		       ,attribute-type-name
+		       "/"
+		       command-name)
+	  attribute-value)))
+     (setf *package* package)))
+
 #|
 Initialization
 |#
@@ -128,9 +149,15 @@ Initialization
 (defgetter get-help "help")
 (defgetter get-config "config")
 (defgetter get-env "env")
+(defgetter get-result "tmp-result")
 (defgetter get-ontology "ontology")
 
+(defsetter set-env "env")
+(defsetter set-config "config")
+(defsetter set-result "tmp-result")
+
 (defun set-ontology (ontology-file-path-string &key other-name overwrite)
+  "this setter is special one amoung photon.init"
   (copy-file (truename ontology-file-path-string)
 	     (concatenate 'string
 			  +photon-user-ontology-directory+
@@ -154,7 +181,7 @@ Initialization
 			(let* ((f-truename (namestring file))
 			       (f-name (pathname-name f-truename))
 			       (f-type (pathname-type f-truename))
-			       (f (concatenate 'string f-name "." f-type)))
+			       (f (concatenate 'string f-truename "/" f-name "." f-type)))
 			  (push f ontology-list))))
     ontology-list))
 
@@ -170,4 +197,4 @@ Initialization
 		+photon-project-ontology-directory+
 		"sample-ontology.xml")
    :overwrite t)
-  (format t "Default ontology has registered as below... ~%~{~t~t * ~A~^~%~}~%" (list-ontology)))
+  (format t "Following ontology has registered as default... ~%~{~t~t * ~A~^~%~}~%" (list-ontology)))
