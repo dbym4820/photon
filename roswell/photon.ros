@@ -22,7 +22,6 @@ exec ros -Q -- $0 "$@"
 	       ))
 (in-package #:ros.script.photon)
 
-
 (defun help-sentence ()
   "Usage: photon [option] ontology-file")
 

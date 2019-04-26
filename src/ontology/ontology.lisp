@@ -49,8 +49,8 @@
 ;;; オントロジー取得元のファイル
 (defparameter *default-ontology-file*
   (concatenate 'string
-	       (namestring (asdf:system-source-directory 'photon))
-	       "src/ontology/sample-ontology.xml"))
+  	       (namestring (asdf:system-source-directory 'photon))
+  	       "src/ontology/ontology/sample-ontology.xml"))
 
 ;;; 取得元オントロジーファイル設定
 (defun set-default-ontology (file-path-string)

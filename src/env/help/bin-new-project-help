@@ -1,6 +1,0 @@
-project name as option-value is required
-
-Usage:
-  utsushiyo --n project-name
-  utsushiyo --new-project project-name
-  utsushiyo new-project project-name

@@ -1,9 +1,0 @@
-usage: utsushiyo [option arg1 arg2 ...]
-
-Options and arguments
--h                   : Show this(utsushiyo's) help message
--h project command   : Show help about specify command
--r project           : Find configuration directory, the package specified in argument
--e project           : Ensure new project configuration directories and copy helps and attributes into the new directory from project directory
--s project attr data : Set attribute of specified project
--g project attr      : Get attribute of specified project

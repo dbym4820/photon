@@ -1,11 +1,24 @@
 (in-package :cl-user)
 (defpackage photon
   (:use :cl)
+  (:import-from :alexandria
+		:make-keyword)
   (:import-from :photon.init
+
+		:get-help
+		:get-env
+		:get-config
+		:get-result
+		
 		:photon-env-init
+		:set-config
+		:set-env
+		:set-result
 		:get-ontology
 		:set-ontology
-		:list-ontology)
+		:list-ontology
+
+		:+photon-user-ontology-directory+)
   (:import-from :photon.hozo
 		:convert-ontology-hozo)
   (:import-from :photon.owl
@@ -46,6 +59,13 @@
                 :ancestor-list
                 :get-concept-type		
 		:update-parent-child-concept)
+  (:import-from :photon.install
+		:install-ontology
+		:installed-directory-name)
+  (:import-from :photon.launcher
+		:photon-launcher)
+  (:import-from :photon.viewer
+		:photon-viewer)
   (:export :convert-ontology
            :set-default-ontology
 	   :make-concept
@@ -83,25 +103,71 @@
 	   :get-concept-type
 
 	   :init
+           :get-help
+	   :get-env
+	   :get-config
 	   :get-ontology
 	   :set-ontology
 	   :list-ontology
+	   
+	   :install
+	   :switch-main-ontology
+
+	   :viewer
+
+	   :run
 	   ))
 (in-package :photon)
 
 #|
 オントロジーのCLOSコンバート
 |#
-(defun convert-ontology (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
-  (case ontology-type
-    (:hozo (convert-ontology-hozo :file-path file-path :ont ont :update update))
-    (:owl (convert-ontology-owl))
-    (:rdf (convert-ontology-rdf))
-    (otherwise (convert-ontology-hozo))))
 
+(defparameter *main-ontology*
+  (or (get-config "main-ontology") *default-ontology*))
+
+(defun update-main-ontology ()
+  (setf *main-ontology*
+	(or
+	 (get-config "main-ontology")
+	 *default-ontology*)))
+
+(defun convert-ontology (&key (ontology-type :hozo) (file-path *main-ontology*) (ont *default-ontology*) (update t))
+  (case ontology-type
+    (:hozo
+     (format t "Convert as Hozo formed ontology~%")
+     (convert-ontology-hozo :file-path file-path :ont ont :update update)
+     (set-result "concept-list"
+		 (format nil "~{~A~^ ~}" (show-concepts))))
+    (:owl
+     (format t "Convert as OWL formed ontology~%")
+     (convert-ontology-owl))
+    (:rdf
+     (format t "Convert as RDF/XML formed ontology~%")
+     (convert-ontology-rdf))
+    (otherwise (convert-ontology-hozo))))
 
 (defun init (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (photon-env-init)
+  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
+  (update-main-ontology)
   (convert-ontology :ontology-type ontology-type :file-path file-path :ont ont :update update)
   (format t "Initialize completed!"))
-  
+
+(defun install (ontology-repository-name)
+  (progn
+    (install-ontology ontology-repository-name)
+    (set-config "main-ontology" (installed-directory-name ontology-repository-name))
+    (update-main-ontology)
+    (convert-ontology)))
+
+(defun switch-main-ontology (ontology-name)
+  (set-config "main-ontology" ontology-name)
+  (update-main-ontology)
+  (convert-ontology))
+
+(defun viewer (command)
+  (photon-viewer (make-keyword command)))
+
+(defun run (concept-name)
+  (photon-launcher (make-keyword concept-name)))

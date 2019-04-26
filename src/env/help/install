@@ -1,0 +1,8 @@
+Usage:
+
+To install an ontology from GitHub:
+   photon install [github-user-name]/[github-repository-name]/.../[github-file-name(without file extension)]
+
+   like below
+
+   	photon install dbym4820/ontologies/anime-ontology/anime-ontology

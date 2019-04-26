@@ -19,16 +19,30 @@
 	       :split-sequence
 	       :cl-project
 	       :jonathan
+	       :usocket
 	       :xmls)
   :components ((:module "src"
                 :components
-                ((:file "ontology")
-		 (:file "hozo" :depends-on ("ontology"))
-		 (:file "owl" :depends-on ("ontology"))
-		 (:file "rdf" :depends-on ("ontology"))
-		 (:file "module")
+		((:file "photon" :depends-on ("init" install ontology system-module launcher viewer))
 		 (:file "init")
-		 (:file "photon" :depends-on ("ontology" "hozo" "owl" "rdf" "module")))))
+		 (:module "install"
+		  :components
+		  ((:file "install")))
+		 (:module "ontology"
+		  :components
+                  ((:file "ontology")
+		   (:file "hozo" :depends-on ("ontology"))
+		   (:file "owl" :depends-on ("ontology"))
+		   (:file "rdf" :depends-on ("ontology"))))
+		 (:module "system-module"
+		  :components
+		  ((:file "module")))
+		 (:module "launcher"
+		  :components
+		  ((:file "launcher")))
+		 (:module "viewer"
+		  :components
+		  ((:file "viewer"))))))
   :description "Ontology Based System Extenstion Framework"
   :long-description
   #.(with-open-file (stream (merge-pathnames
