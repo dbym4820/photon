@@ -18,7 +18,9 @@ exec ros -Q -- $0 "$@"
 	        :show-attribute
 		:list-ontology
 		:init
-		:set-ontology
+		:install
+		:viewer
+		:run
 	       ))
 (in-package #:ros.script.photon)
 
@@ -40,28 +42,27 @@ exec ros -Q -- $0 "$@"
 	  ((option-eq first-option '("--list-ontology" "-lo"))
 	   ;; オントロジーのリスト表示
 	   (format t "~{~A~%~}" (list-ontology)))
-	  ((option-eq first-option '("--init" "-i"))
+	  ((option-eq first-option '("init" "--init" "-i"))
 	   (init))
-	  ((option-eq first-option '("--register-ontology" "-r"))
-	   ;; オントロジーの登録
-	   (set-ontology second-option))
-	  ((option-eq first-option '("--help" "-h"))
+	  ((option-eq first-option '("install" "--install" "-i"))
+	   ;; オントロジーのダウンロード
+	   (if second-option
+	       (install second-option)
+	       (viewer "help/install")))
+	  ((option-eq first-option '("help" "--help" "-h"))
 	   ;; ヘルプ
-	   (format t "~A~%" (help-sentence)))
+	   (format t "~A~%" (viewer "help/system")))
 	  ((option-eq first-option '("--file" "-f"))
 	   ;; ファイルを指定してオントロジーの基本概念一覧を表示
            (convert-ontology :file-path second-option)
            (format t "~{~A~^, ~}~%" (remove "whole-root" (show-concepts) :test #'string=)))
-          ((option-eq first-option '("--all-concept" "-a"))
+          ((option-eq first-option '("show" "--show-all-concept" "-s"))
 	   ;; ファイルを指定せずにオントロジーの基本概念一覧を表示
-           (format t "~{~A~^, ~}~%" (show-concepts)))
-          ((option-eq first-option '("--list-concept" "-lc"))
-	   ;; ファイルを指定して，改行ありで基本概念一覧を表示
-	   (when second-option
-	     (convert-ontology :file-path second-option))
-           (format t "~{~A~%~}" (remove "whole-root" (show-concepts) :test #'string=)))
+           (format t "~{~A~^, ~}~%" (viewer "concept-list")))
 	  ((option-eq first-option '("--child" "-c"))
-	   (format t "~A~%" (help-sentence)))
-          (t
+	   (format t "~A~%" (viewer "help/system")))
+	  ((option-eq first-option '("version" "--version" "-v"))
+	   (format t "~A~%" (viewer "config/version")))
+	  (t
 	   ;; 入力ミス
-           (format t "~A~%" (help-sentence))))))
+           (format t "~A~%" (viewer "help/system"))))))
