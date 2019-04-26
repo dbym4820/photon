@@ -152,7 +152,7 @@
   (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
   (update-main-ontology)
   (convert-ontology :ontology-type ontology-type :file-path file-path :ont ont :update update)
-  (format t "Initialize completed!"))
+  (format t "Initialize completed!~%"))
 
 (defun install (ontology-repository-name)
   (progn
