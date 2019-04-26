@@ -171,4 +171,3 @@ Initialization
 		"sample-ontology.xml")
    :overwrite t)
   (format t "Default ontology has registered as below... ~%~{~t~t * ~A~^~%~}~%" (list-ontology)))
-

@@ -37,7 +37,7 @@ $ echo "export PATH='$(HOME)/.roswell/bin':$PATH" >> ~/.profile
 
 ## Usage
 
-### オントロジーファイルの開発（外部のオントロジ０エディタを利用）
+### オントロジーファイルの開発（外部のオントロジーエディタを利用）
 
 - [法造(Hozo) - オントロジーエディタ](http://www.hozo.jp/download_en.html)
 
