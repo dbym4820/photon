@@ -39,7 +39,7 @@
       ""))
 
 (defun installed-directory-name (relative-directory &key (file-type "xml"))
-  (format nil "~A~A.~A" +photon-user-ontology-directory+ relative-directory file-type))
+  (format nil "~A~A.~A" photon.init::+photon-user-ontology-directory+ relative-directory file-type))
 
 
 (defun expand-ontology-repository-name (repository-name &key (branch "master") (file-type "xml"))
