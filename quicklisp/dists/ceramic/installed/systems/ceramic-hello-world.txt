@@ -1,0 +1,1 @@
+dists/ceramic/software/ceramic-branch-master/examples/hello-world/ceramic-hello-world.asd

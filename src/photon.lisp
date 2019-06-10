@@ -66,6 +66,8 @@
 		:photon-launcher)
   (:import-from :photon.viewer
 		:photon-viewer)
+  (:import-from :photon.gui
+		:launch-gui)
   (:export :convert-ontology
            :set-default-ontology
 	   :make-concept

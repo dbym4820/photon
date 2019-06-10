@@ -1,0 +1,2 @@
+# project url size file-md5 content-sha1 prefix [system-file1..system-fileN]
+ceramic qlot://localhost/archive/ceramic/git-7e4c1b5f7b4918f900c119d8aa40b2365236c52e/ceramic-branch-master.tar.gz 87241 79e5ac4ac13acab62058f07cabf3123f e2c9a44e188c15a2eb87b7819e10923b83214daa ceramic-branch-master ceramic-test.asd ceramic.asd examples/hello-world/ceramic-hello-world.asd t/app/ceramic-test-app.asd

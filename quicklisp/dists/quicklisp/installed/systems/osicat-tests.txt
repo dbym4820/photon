@@ -1,0 +1,1 @@
+dists/quicklisp/software/osicat-20180228-git/osicat-tests.asd

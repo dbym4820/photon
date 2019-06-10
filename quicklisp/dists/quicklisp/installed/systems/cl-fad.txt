@@ -1,0 +1,1 @@
+dists/quicklisp/software/cl-fad-20180430-git/cl-fad.asd

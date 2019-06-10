@@ -1,0 +1,1 @@
+dists/quicklisp/software/cl-project-20190521-git/cl-project-test.asd

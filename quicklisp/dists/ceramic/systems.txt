@@ -1,0 +1,5 @@
+# project system-file system-name [dependency1..dependencyN]
+ceramic ceramic-test ceramic-test ceramic ceramic-test-app fiveam
+ceramic ceramic ceramic cl-json clack-handler-hunchentoot copy-directory electron-tools external-program remote-js trivial-build trivial-compress trivial-download trivial-exe trivial-extract uiop uuid
+ceramic ceramic-hello-world ceramic-hello-world ceramic lucerne
+ceramic ceramic-test-app ceramic-test-app ceramic drakma

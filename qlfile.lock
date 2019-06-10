@@ -1,0 +1,10 @@
+("quicklisp" .
+ (:class qlot.source.ql:source-ql-all
+  :initargs (:distribution "http://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
+  :version "2019-05-21"))
+("ceramic" .
+ (:class qlot.source.git:source-git
+  :initargs (:project-name "ceramic" :remote-url "https://github.com/dbym4820/ceramic.git" :branch "master")
+  :version "git-7e4c1b5f7b4918f900c119d8aa40b2365236c52e"
+  :remote-url "https://github.com/dbym4820/ceramic.git"
+  :ref "7e4c1b5f7b4918f900c119d8aa40b2365236c52e"))

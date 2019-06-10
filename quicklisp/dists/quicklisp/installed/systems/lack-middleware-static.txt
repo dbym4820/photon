@@ -1,0 +1,1 @@
+dists/quicklisp/software/lack-20190521-git/lack-middleware-static.asd

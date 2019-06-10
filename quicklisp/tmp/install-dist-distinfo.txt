@@ -1,0 +1,5 @@
+name: ceramic
+version: git-b81e79b3894371d7843b4332aef7da334b067d31
+distinfo-subscription-url: qlot://localhost/ceramic.txt
+release-index-url: qlot://localhost/ceramic/git-b81e79b3894371d7843b4332aef7da334b067d31/releases.txt
+system-index-url: qlot://localhost/ceramic/git-b81e79b3894371d7843b4332aef7da334b067d31/systems.txt

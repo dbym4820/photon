@@ -1,0 +1,14 @@
+;;; -*- mode: lisp -*-
+
+(module
+ (:fullname "lisp-invocation"
+  :author ("Francois-Rene Rideau")
+  :maintainer "Francois-Rene Rideau"
+  :licence "MIT" ;; MIT-style license. See LICENSE
+  :description "Lisp invocation"
+  :long-description "Invoke another Common Lisp as a separate (possibly remote) process
+from your current Common Lisp image."
+  :build-depends-on ((:asdf "asdf")) ;; actually, UIOP
+  :depends-on ("lisp-invocation")
+   :supersedes-asdf ("lisp-invocation")
+  :build-image nil))

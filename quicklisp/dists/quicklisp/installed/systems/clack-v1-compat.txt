@@ -1,0 +1,1 @@
+dists/quicklisp/software/clack-20190521-git/clack-v1-compat.asd
