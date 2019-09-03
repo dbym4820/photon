@@ -185,6 +185,9 @@ Initialization
 			  (push f ontology-list))))
     ontology-list))
 
+(defun delete-photon-directory ()
+  (delete-directory-and-files +photon-user-directory+))
+
 (defun photon-env-init ()
   (format t "Initialize photon home directory: ~A ...~%" +photon-user-directory+)
   (make-directory +photon-user-directory+)
