@@ -9,7 +9,7 @@
   (:import-from :prove
 		:plan
 		:subtest
-		:ok :ng
+		:ok
 		:is
 		:finalize))
 (in-package :photon-test)
