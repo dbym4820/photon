@@ -11,6 +11,7 @@
 		:subtest
 		:ok
 		:is
+		:is-type
 		:finalize))
 (in-package :photon-test)
 
