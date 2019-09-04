@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.com/dbym4820/photon.svg?branch=master)](https://travis-ci.com/dbym4820/photon)
 
-## FUnctions you are able to carry out by using PHOTON
+## Issue
+
+- 空白のあるオントロジーへの対応が辛い
+
+## Functions you are able to carry out by using PHOTON
 
 - Download ontology from Github
 - Read and convert ontology into CLOS object
