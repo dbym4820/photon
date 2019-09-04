@@ -1,0 +1,1 @@
+dists/quicklisp/software/trivial-exe-20151218-git/trivial-exe-test.asd

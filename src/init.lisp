@@ -7,10 +7,6 @@
                 :directory-exists-p
 		:file-exists-p
 		:delete-file-if-exists)
-  (:import-from :uiop/common-lisp
-                :user-homedir-pathname)
-  (:import-from :cl-project		
-		:make-project)
   (:import-from :cl-fad
 		:copy-file
 	        :list-directory
@@ -19,8 +15,6 @@
 		:directory-pathname-p
 		:merge-pathnames-as-directory
                 :merge-pathnames-as-file)
-  (:import-from :cl-ppcre
-		:split)
   (:export :photon-env-init
 	   :get-ontology
 	   :get-env

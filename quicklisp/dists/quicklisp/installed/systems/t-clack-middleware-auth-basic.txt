@@ -1,0 +1,1 @@
+dists/quicklisp/software/clack-20190521-git/v1-compat/t-clack-middleware-auth-basic.asd

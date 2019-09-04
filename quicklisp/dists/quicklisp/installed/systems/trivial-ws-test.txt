@@ -1,0 +1,1 @@
+dists/quicklisp/software/trivial-ws-20180131-git/trivial-ws-test.asd

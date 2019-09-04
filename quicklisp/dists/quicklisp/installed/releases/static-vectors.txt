@@ -1,0 +1,1 @@
+dists/quicklisp/software/static-vectors-v1.8.3/

@@ -1,0 +1,1 @@
+dists/ceramic/software/ceramic-branch-master/t/app/ceramic-test-app.asd

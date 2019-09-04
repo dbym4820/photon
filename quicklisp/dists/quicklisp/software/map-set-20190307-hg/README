@@ -1,0 +1,7 @@
+                               MAP-SET
+                               -------
+
+                           By Robert Smith
+
+Implementation of a set-like data structure with constant time
+addition, removal, and random selection.

@@ -4,26 +4,27 @@
 (in-package :photon-asd)
 
 (defsystem photon
-  :version "0.2.0"
+  :version "0.3.0"
   :author "Tomoki ABURATANI"
   :license "MIT"
+  ;; :email "aburatanitomoki@gmail.com"
   :homepage "https://github.com/dbym4820/photon"
-  :depends-on (:uiop
+  :depends-on (:ceramic
+	       :clack
+	       :clack-static-asset-middleware
+	       :ningle
+	       :uiop
                :cl-fad
-	       :cl-ppcre
 	       :alexandria
-               :local-time
-               :bordeaux-threads
 	       :dexador
-	       :trivial-shell
 	       :split-sequence
 	       :cl-project
-	       :jonathan
 	       :usocket
+	       :jonathan
 	       :xmls)
   :components ((:module "src"
                 :components
-		((:file "photon" :depends-on ("init" install ontology system-module launcher viewer))
+		((:file "photon" :depends-on ("init" install ontology system-module launcher viewer gui))
 		 (:file "init")
 		 (:module "install"
 		  :components
@@ -37,6 +38,9 @@
 		 (:module "system-module"
 		  :components
 		  ((:file "module")))
+		 (:module "gui"
+		  :components
+		  ((:file "gui")))
 		 (:module "launcher"
 		  :components
 		  ((:file "launcher")))
