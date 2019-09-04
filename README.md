@@ -2,19 +2,25 @@
 
 [![Build Status](https://travis-ci.com/dbym4820/photon.svg?branch=master)](https://travis-ci.com/dbym4820/photon)
 
-## What is Photon
+## FUnctions you are able to carry out by using PHOTON
 
-オントロジーを基礎としたシステム開発用フレームワーク
+- Download ontology from Github
+- Read and convert ontology into CLOS object
+- 
 
 ## Status
 
-- [X] 法造形式XMLオントロジー
-- [ ] XML/RDF形式オントロジー
-- [ ] OWL形式オントロジー
+### Ontology Downloader
+- [X] From Github
+
+### Ontology Converter from Ontology into CLOS
+- [X] Hozo formatted XML ontology
+- [ ] XML/RDF-form ontology
+- [ ] OWL-form ontology
 
 ## Installation
 
-- まず，Roswellをインストールしてください．
+1. Install roswell via Homwbrew (or Linuxbrew)
 
 ```
 # (For Linux: You have to install linuxbrew at first. See [Linuxbrew installation](https://github.com/Linuxbrew))
@@ -25,7 +31,7 @@ $ brew install roswell
 $ echo "export PATH='$(HOME)/.roswell/bin':$PATH" >> ~/.profile
 ```
 
-- 次に，PhotonをRoswell経由もしくはGithubからインストールしてください
+2. Install Photon from Github via Roswell
 
 ```
 # Install photon via roswell
@@ -37,48 +43,48 @@ $ echo "export PATH='$(HOME)/.roswell/bin':$PATH" >> ~/.profile
 
 ## Usage
 
-### オントロジーファイルの開発（外部のオントロジーエディタを利用）
+### Editting Ontology by using developed Ontology Editors
 
-- [法造(Hozo) - オントロジーエディタ](http://www.hozo.jp/download_en.html)
+- [法造(Hozo) - Ontology Editor](http://www.hozo.jp/download_en.html)
 
-### Common Lisp用API
+### API for CommonLisp
 
-- Photonの初期化（ホームディレクトリにphoton用のディレクトリを作成）
+- Environment Initializer (Making .photon directory at home directory)
 
 ```
 CL-USER> (photon:init)
 ```
 
-- xml形式のオントロジーをCLOSに変換
+- Converting Ontology
 
 ```
 # ファイルパスの指定がなければ，デフォルトファイルを参照
-CL-USER> (photon:convert-concept "/path/to/xml")
+CL-USER> (photon:convert-ontology "/path/to/xml")
 ("whole-root" ....)
 ```
 
-- コンバートしたオントロジーに含まれるすべての概念を出力
+- Show all concepts in converted ontology
 
 ```
 CL-USER> (photon:show-concepts)
 ("whole-root" ....)
 ```
 
-- インスタンス以外の概念をすべて出力
+- Show all concepts in converted ontology without instance concepts
 
 ```
 CL-USER> (photon:show-all-class-concept)
 ("whole-root" ....)
 ```
 
-- インスタンス化された概念だけを出力
+- Show all instanced concepts in converted ontology
 
 ```
 CL-USER> (photon:show-all-instance)
 ("some instance" ....)
 ```
 
-- 概念ラベルからCLOS形式に直された概念クラスを取得
+- Get CLOS object of a concept from concept label
 
 ```
 CL-USER> (photon:find-concept "concept-label")

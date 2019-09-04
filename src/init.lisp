@@ -109,7 +109,7 @@ Attribute utilities
 			     +photon-user-directory+
 			     attribute-name)))
     (with-open-file (file-var f-name :direction :output
-				     :if-exists :overwrite
+				     :if-exists :supersede
 				     :if-does-not-exist :create)
       (write-string
        attribute-content file-var))))
@@ -134,6 +134,10 @@ Help utilities
 	  (*package* (find-package :photon.init)))
      (defgeneric ,getter-name-symbol (command-name attribute-value)
        (:method ((command-name string) (attribute-value string))
+	 (let ((d-name (concatenate 'string
+				    +photon-user-directory+
+				    ,attribute-type-name "/")))
+	   (make-directory d-name))
 	 (set-attribute
 	  (concatenate 'string
 		       ,attribute-type-name
@@ -151,10 +155,12 @@ Initialization
 (defgetter get-env "env")
 (defgetter get-result "tmp-result")
 (defgetter get-ontology "ontology")
+(defgetter get-ontology-details "ontology-details")
 
 (defsetter set-env "env")
 (defsetter set-config "config")
 (defsetter set-result "tmp-result")
+(defsetter set-ontology-details "ontology-details")
 
 (defun set-ontology (ontology-file-path-string &key other-name overwrite)
   "this setter is special one amoung photon.init"

@@ -16,6 +16,8 @@
 		:set-result
 		:get-ontology
 		:set-ontology
+                :get-ontology-details
+                :set-ontology-details
 		:list-ontology
 
 		:+photon-user-ontology-directory+)
@@ -149,25 +151,44 @@
 
 (defun init (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (photon-env-init)
-  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
+  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology"))
   (update-main-ontology)
-  (convert-ontology :ontology-type ontology-type :file-path file-path :ont ont :update update)
+  (prog1
+      (convert-ontology :ontology-type ontology-type
+			:file-path file-path
+			:ont ont
+			:update update)
+    (get-all-converted-ontology-details))
   (format t "Initialize completed!~%"))
+
+(defun get-all-converted-ontology-details ()
+  (mapcar #'(lambda (concept-object)
+	      (set-ontology-details
+	       (concept-name concept-object)
+	       (show-attribute concept-object)))
+	  (mapcar #'find-concept
+		  (show-concepts)))
+  (format t "Writing ontology details is finished!~%"))
 
 (defun install (ontology-repository-name)
   (progn
     (install-ontology ontology-repository-name)
     (set-config "main-ontology" (installed-directory-name ontology-repository-name))
     (update-main-ontology)
-    (convert-ontology)))
+    (format t "Ontology is Downloaded in ~A~%" (get-config "main-ontology"))
+    (prog1
+	(convert-ontology)
+      (get-all-converted-ontology-details))))
 
 (defun switch-main-ontology (ontology-name)
   (set-config "main-ontology" ontology-name)
   (update-main-ontology)
-  (convert-ontology))
+  (prog1
+      (convert-ontology)
+    (get-all-converted-ontology-details)))
 
-(defun viewer (command)
-  (photon-viewer (make-keyword command)))
+(defun viewer (command &optional optional-command)
+  (photon-viewer (make-keyword command) optional-command))
 
 (defun run (concept-name)
   (photon-launcher (make-keyword concept-name)))

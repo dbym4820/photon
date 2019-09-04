@@ -17,6 +17,7 @@ exec ros -Q -- $0 "$@"
 	        :find-concept
 	        :show-attribute
 		:list-ontology
+		:get-ontology-details
 		:init
 		:install
 		:viewer
@@ -49,6 +50,12 @@ exec ros -Q -- $0 "$@"
 	   (if second-option
 	       (install second-option)
 	       (viewer "help/install")))
+	  ((option-eq first-option '("details" "--details" "-d"))
+	   ;; コンバート済みオントロジー内の概念の詳細検索
+	   (if second-option
+	       (format t "~A~%"
+		       (viewer "ontology/details" second-option))
+	       (viewer "help/viewer")))
 	  ((option-eq first-option '("help" "--help" "-h"))
 	   ;; ヘルプ
 	   (format t "~A~%" (viewer "help/system")))
