@@ -43,6 +43,10 @@ $ echo "export PATH='$(HOME)/.roswell/bin':$PATH" >> ~/.profile
 
 ## Usage
 
+## Usage as roswell script
+
+Please go to [this page](./roswell/).
+
 ### Editting Ontology by using developed Ontology Editors
 
 - [法造(Hozo) - Ontology Editor](http://www.hozo.jp/download_en.html)
