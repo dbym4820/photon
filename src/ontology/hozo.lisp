@@ -2,7 +2,10 @@
 (defpackage photon.hozo
   (:use :cl)
   (:import-from :alexandria
-                :read-file-into-string)
+                :read-file-into-string
+		:write-string-into-file)
+  (:import-from :split-sequence
+		:split-sequence)
   (:import-from :photon.ontology
   		:*default-ontology*
                 :*default-ontology-file*
@@ -212,4 +215,172 @@
 			 (when (string= (car child-parent) concept-name)
 			   (cdr child-parent)))
 		     (get-child-parent xml-file-path))))
+
+
+
+
+
+
+
+#|------------------------------------------------------------------------------|#
+#|------------------ XMLオブジェクトとの対応を保ったままにする -----------------|#
+;; tessutoyou
+;; (photon.hozo::renew-xml-struct (photon.hozo::xml-objector "/Users/tomoki/Desktop/ontology.xml"))
+
+(defparameter *xml-struct* nil)
+(defparameter *newest-hozo-file-path* nil)
+(defun xml-objector (file-path)
+  (xmls:parse (read-file-into-string file-path) :compress-whitespace t))
+(defun set-xml-struct (file-path)
+  (setf *xml-struct* (xml-objector file-path))
+  (setf *newest-hozo-file-path* file-path))
+
+;;(set-xml-struct "~/.photon/ontology/english-conversation.xml")
+
+(defun find-ont-id-struct (xml-struct)
+  (second (assoc "ont_id" (xmls:node-attrs xml-struct) :test #'string=)))
+
+#|--------------- 抽出機(基本概念（CONCEPT））を前提 |#
+;;; 特定ノード（Struct）のラベルを抽出
+(defun extract-node-label (node-struct)
+  (car
+   (remove-if #'null
+	      (mapcar #'(lambda (node)
+			  (when (string= "LABEL" (xmls:node-name node))
+			    (car (xmls:node-children node))))
+		      (xmls:node-children node-struct)))))
+
+;;; 特定ノード（Struct）の座標を抽出
+(defun extract-node-position (node-struct)
+  (car
+   (remove-if #'null
+	      (mapcar #'(lambda (node)
+			  (when (string= "POS" (xmls:node-name node))
+			    (reverse (xmls:node-attrs node))))
+		      (xmls:node-children node-struct)))))
+
+
+;;; 特定ノード（Struct）のIDを抽出
+(defun extract-node-id (node-struct)
+  (let ((id (assoc "id" (xmls:node-attrs node-struct) :test #'string=)))
+    (when id (second id))))
+
+;;; 特定ノード（Struct）のinstantiationを抽出
+(defun extract-node-instantiation (node-struct)
+  (let ((inst (assoc "instantiation" (xmls:node-attrs node-struct) :test #'string=)))
+    (when inst (second inst))))
+
+(defun extract-node-slots (node-struct)
+  (remove-if #'null
+	     (mapcar #'(lambda (d)
+			 (when (string= (xmls:node-name d) "SLOTS")
+			   d))
+		     node-struct)))
+
+
+#|------------- 検索機 |#
+;;; ノード名が対象のものと合致するまでCHILDRENのノードを検索
+(defun node-searcher-by-structure-name (target-node-name &optional (struct *xml-struct*))
+  (labels ((rec-point (tmp-struct)
+	     (if (string= (xmls:node-name tmp-struct) target-node-name)
+		 tmp-struct
+		 (remove-if #'null
+			    (loop for node in (xmls:node-children tmp-struct)
+				  when (and node (eq (type-of node) 'xmls:node))
+				    collect (rec-point node))))))
+    (alexandria:flatten (rec-point struct))))
+
+;;; 属性でノード検索
+(defun node-searcher-by-attribute (extractor attribute-value &optional (struct *xml-struct*)) 
+  (loop for node in (node-searcher-by-structure-name "CONCEPT" struct)
+	when (string= (funcall extractor node) attribute-value)
+	collect node))
+
+;;; ノードをID属性で検索
+(defun node-searcher-by-id (node-id &optional (struct *xml-struct*)) 
+  (first (node-searcher-by-attribute #'extract-node-id node-id struct)))
+
+;;; インスタンスノードかどうかで検索
+(defun instance-node-searcher (&optional (struct *xml-struct*)) 
+  (node-searcher-by-attribute #'extract-node-instantiation "true" struct))
+
+;;; 基本概念ノードのラベルで検索
+(defun node-searcher-by-label (node-label &optional (struct *xml-struct*))
+  (first (node-searcher-by-attribute #'extract-node-label node-label struct)))
+
+;;; 各基本概念（問いインスタンス）に当たるノードのPart-of（すなわちクエスチョンのプレースホルダーに入る問い）部分と，そのRequiredKeywordを抽出
+(defun extract-part-and-keyword (node)
+  (let* ((node-lst
+	   (extract-node-slots
+	    (xmls:node-children node)))
+	 (n-lst (flatten
+		 (mapcar #'xmls:node-children
+			 node-lst))))
+    (mapcar #'(lambda (d)
+		(list (second (assoc "role" (xmls:node-attrs d) :test #'string=))
+		      (loop for tmp in (car
+					(mapcar #'(lambda (sd)
+						    (flatten (mapcar #'xmls:node-children (xmls:node-children sd))))
+						(loop for x in (xmls:node-children d)
+						      when (string= "SLOTS" (xmls:node-name x))
+							collect x)))
+			    when (string= (xmls:node-name tmp) "SUB_L")
+			      collect (second (assoc "class_const" (xmls:node-attrs tmp) :test #'string=)))))
+	    n-lst)))
+    
+
+
+  
+#|------------- 処理 |#
+;;; IDのインクリメントする
+(defun generate-increamented-newest-node-id (id)
+  (let* ((delimiter "_")
+	 (contamined-symbol (split-sequence delimiter id :test #'string=))
+	 (garbage-id (first contamined-symbol))
+	 (main-id (second contamined-symbol))
+	 (id-type (subseq main-id 0 1))
+	 (id-number (parse-integer (subseq main-id 1))))
+    (format nil "~A_~A~A" garbage-id id-type (1+ id-number))))
+
+;;; ノードを追加する
+(defun add-basic-concept-node-as-strusture (label &optional parent child))
+
+;;; ノード情報を書き換える
+;; attributesを書き換える
+(defun rewrite-node-attributes (node-struct target-attribute-string replacement)
+  (let ((attributes
+	  (remove-if #'(lambda (attr-list)
+			 (when (string= (car attr-list) target-attribute-string) t))
+		     (xmls:node-attrs node-struct)))
+	(replace-pair (list target-attribute-string replacement)))
+    (setf (xmls:node-attrs node-struct) (push replace-pair attributes))))
+
+;; 座標を書き換える
+(defun rewrite-node-position (node-struct x y)
+  (let ((coordinate (list (list "x" x) (list "y" y))))
+    (loop for node in (xmls:node-children node-struct)
+	  when (string= "POS" (xmls:node-name node))
+	    do (setf (xmls:node-attrs node) coordinate))))
+
+;; ラベルを書き換える(CONCEPTの中だけなので，ISAも別途書き換える)
+(defun rewrite-node-label-only-concept (node-struct new-label)
+  (let ((new-label-object (list new-label)))
+    (loop for node in (xmls:node-children node-struct)
+	  when (string= "LABEL" (xmls:node-name node))
+	    do (setf (xmls:node-children node) new-label-object))))
+
+(defun rewrite-node-add-child (node-struct child-node-struct)
+  (setf (xmls:node-children node-struct) (push child-node-struct (xmls:node-children node-struct))))
+
+(defun replot-hozo (&optional (pathname-string new-xml-struct *newest-hozo-file-path*))
+  "Rewrite hozo file, e.g.: (progn (photon.hozo::set-xml-struct \"~/Desktop/photon.xml\") (photon.hozo::rewrite-node-position (photon.hozo::node-searcher-by-label \"Any\") 500 0) (photon.hozo::replot-hozo))"
+  (write-string-into-file
+   (format nil "~A~%~A"
+	   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	   (xmls:toxml new-xml-struct))
+   pathname-string :if-exists :supersede :if-does-not-exist :create))
+
+
+#| 高次元処理 |#
+
 

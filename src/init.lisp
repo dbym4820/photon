@@ -67,7 +67,7 @@ Directory utilities
 	  do (make-directory path)))
 
 (defun copy-directory (from to)
-  "copy directory directory"
+  "copy directory"
   (flet ((rel-path (parent child)
            (subseq (namestring child)
                    (length (namestring parent)))))
