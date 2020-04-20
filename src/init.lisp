@@ -15,6 +15,8 @@
 		:directory-pathname-p
 		:merge-pathnames-as-directory
                 :merge-pathnames-as-file)
+  (:import-from :cl-ppcre
+                :regex-replace-all)
   (:export :photon-env-init
 	   :get-ontology
 	   :get-env
@@ -26,7 +28,9 @@
 	   :set-env
 	   :set-result
 	   :set-ontology
-	   :list-ontology))
+	   :list-ontology
+           :find-ontology-path
+	   :delete-photon-directory))
 (in-package :photon.init)
 
 #| 
@@ -51,6 +55,15 @@ Constant valiables
 #|
 Directory utilities
 |#
+(defun escape-wild-string (str)
+  "escape wild-string like '[~~]' and '?' as '\\[~~\\]' and '\\?'"
+  (regex-replace-all
+   "([\\?\\[\\]\\*\\&\\%\\$\\^\\(\\)\\_])"
+   str
+   "\\\\\\1"
+   :preserve-case t)
+  )
+
 (defun check-directory-duplicate-p (directory-pathname)
   "return t when target directory has been existed"
   (directory-exists-p directory-pathname))
@@ -89,9 +102,11 @@ Attribute utilities
 ;; (get-attribute "user/user-name") => "tomoki"
 ;; (get-attribute "user/user-name") => "tomoki"
 (defun get-attribute (attribute-name)
-  (let ((f-name (concatenate 'string
-			     +photon-user-directory+
-			     attribute-name)))
+  (let ((f-name
+	  (escape-wild-string
+	   (concatenate 'string
+			+photon-user-directory+
+			attribute-name))))
     (if (file-exists-p f-name)
 	(read-file-into-string f-name)
 	"")))
@@ -99,9 +114,11 @@ Attribute utilities
 ;; (set-attribute "user/user-name" "tomoki")
 ;; (set-attribute "user/user-name" "tomoki")
 (defun set-attribute (attribute-name attribute-content)
-  (let ((f-name (concatenate 'string
-			     +photon-user-directory+
-			     attribute-name)))
+  (let ((f-name
+	  (escape-wild-string
+	   (concatenate 'string
+			+photon-user-directory+
+			attribute-name))))
     (with-open-file (file-var f-name :direction :output
 				     :if-exists :supersede
 				     :if-does-not-exist :create)
@@ -180,10 +197,14 @@ Initialization
 		    #'(lambda (file)
 			(let* ((f-truename (namestring file))
 			       (f-name (pathname-name f-truename))
-			       (f-type (pathname-type f-truename))
-			       (f (concatenate 'string f-truename "/" f-name "." f-type)))
-			  (push f ontology-list))))
+			       ;; (f-type (pathname-type f-truename))
+			       ;; (f (concatenate 'string f-truename "/" f-name "." f-type))
+			       )
+			  (push (list f-name f-truename) ontology-list))))
     ontology-list))
+
+(defun find-ontology-path (ontology-name)
+  (second (assoc ontology-name (list-ontology) :test #'string=)))
 
 (defun delete-photon-directory ()
   (delete-directory-and-files +photon-user-directory+))
@@ -200,4 +221,5 @@ Initialization
 		+photon-project-ontology-directory+
 		"sample-ontology.xml")
    :overwrite t)
-  (format t "Following ontology has registered as default... ~%~{~t~t * ~A~^~%~}~%" (list-ontology)))
+  (format t "Following ontology has registered as default... ~%~{~t~t * ~@A~^~%~}~%"
+	  (list-ontology)))

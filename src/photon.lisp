@@ -19,7 +19,8 @@
                 :get-ontology-details
                 :set-ontology-details
 		:list-ontology
-
+		:find-ontology-path
+		:delete-photon-directory
 		:+photon-user-ontology-directory+)
   (:import-from :photon.hozo
 		:convert-ontology-hozo)
@@ -52,6 +53,12 @@
 		:find-concept
                 :find-attribute
 		:show-attribute
+                :get-restricted-concepts
+                :get-part-concepts-class-restriction
+                :get-part-concepts-role-name
+                :get-part-concepts-role-and-restriction
+                :get-part-concept-info
+                :get-single-restricted-concepts
                 :get-restricted-concepts
 		;; predicates
 		:same-concept-p
@@ -104,6 +111,13 @@
 	   :ancestor-p
 	   :parent-p
 
+	   :get-part-concepts-class-restriction
+           :get-part-concepts-role-name
+           :get-part-concepts-role-and-restriction
+           :get-part-concept-info
+           :get-single-restricted-concepts
+           :get-restricted-concepts
+	   
 	   :get-concept-type
 
 	   :init
@@ -113,6 +127,8 @@
 	   :get-ontology
 	   :set-ontology
 	   :list-ontology
+           :find-ontology-path
+	   :delete-photon-directory
 	   
 	   :install
 	   :switch-main-ontology

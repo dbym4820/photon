@@ -43,6 +43,13 @@
 	   :ancestor-p
 	   :parent-p
 
+	   :get-part-concepts-class-restriction
+           :get-part-concepts-role-name
+           :get-part-concepts-role-and-restriction
+           :get-part-concept-info
+           :get-single-restricted-concepts
+           :get-restricted-concepts
+
 	   ))
 (in-package :photon.ontology)
 
