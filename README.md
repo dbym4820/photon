@@ -24,7 +24,7 @@
 
 ## Installation
 
-1. Install roswell via Homwbrew (or Linuxbrew)
+1. Install roswell via Homebrew (or Linuxbrew)
 
 ```
 # (For Linux: You have to install linuxbrew at first. See [Linuxbrew installation](https://github.com/Linuxbrew))
