@@ -68,11 +68,11 @@
 |#
 (defclass concept ()
   ((concept-name :initform "any" :initarg :name :accessor concept-name)
-   (concept-id :initform nil :initarg :concept-id :accessor concept-id)))
+   (concept-id :initform nil :initarg :concept-id :accessor concept-id)
+   (property-list :initform nil :initarg :property :accessor property-list)))
 
 (defclass basic-concept (concept)
-  ((property-list :initform nil :initarg :property :accessor property-list)
-   (parent-concept :initform nil :initarg :parent-concept :accessor parent-concept)
+  ((parent-concept :initform nil :initarg :parent-concept :accessor parent-concept)
    (child-concept-list :initform nil :initarg :child-concept-list :accessor child-concept-list)
    (instantiation :initform nil :initarg :instantiation :accessor instantiation)))
 
@@ -165,6 +165,16 @@
 	     `(,(property-list target-concept)))
 	 (cons new-property nil))))
 
+;;; 部分概念にプロパティを挿入
+(defmethod append-concept ((new-property non-basic-concept) (target-concept non-basic-concept))
+  (setf (property-list target-concept)
+        (append
+	 (if (consp (property-list target-concept))
+	     (property-list target-concept)
+	     `(,(property-list target-concept)))
+	 (cons new-property nil))))
+
+
 ;;; 関係概念にプロパティを挿入
 (defmethod append-concept ((new-property part-of-concept) (target-relation relation-concept))
   (setf (property-list target-relation)
@@ -222,6 +232,8 @@ CLOSオントロジー操作用API
   (declare (ignorable concept-type))
   (append-concept (make-concept concept-name) ont))
 
+
+
 #|
 オントロジー検索用API
 |#
@@ -232,9 +244,17 @@ CLOSオントロジー操作用API
 	   (show-ontology ont)))
 
 (defun find-concept-from-id (concept-id &optional (ont *default-ontology*))
-  (find-if #'(lambda (c)
-	       (when (string= concept-id (concept-id c)) t))
-	   (show-ontology ont)))
+  (let* ((basic-concept (show-ontology ont)) ;; 基本概念
+	 (part-concept ;; 部分概念
+	   (flatten
+	    (remove-if #'null
+		       (mapcar #'property-list basic-concept))))
+	 (part-part-concept ;; 部分概念の更に部分概念
+	   (remove-if #'null
+		      (flatten (mapcar #'property-list part-concept))))) 
+    (find-if #'(lambda (c)
+    		 (when (string= concept-id (concept-id c)) t))
+    	     (append basic-concept part-concept part-part-concept))))
 
 
 

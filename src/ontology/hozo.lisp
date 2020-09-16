@@ -11,6 +11,7 @@
                 :*default-ontology-file*
 		:make-concept
 		:find-concept
+		:find-concept-from-id
                 :clear-ontology
 		:add-concept
                 :append-concept
@@ -96,6 +97,33 @@
 				  (when (tag-p "SLOTS" concept-tag) t))
 			      (get-specific-concept-tags concept-name concept-list xml-file-path)))))
 
+;;; ２段めの部分・属性概念のリストを取得
+(defun get-concept-second-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+  (let ((second-part-list
+	  (remove-if #'(lambda (c)
+			 (unless (second c) t)) ;; サブツリーがなければ削除
+		     (mapcar #'(lambda (slot)
+				 (let ((part-concept-id ;; パート概念のID
+					 (second (assoc "id" (second slot) :test #'string=)))
+				       (sub-part-tree
+  					 (when (tag-p "SLOT" slot)
+  					   (find-if #'(lambda (concept-tag)
+  			 				(when (tag-p "SLOTS" concept-tag) t))
+			 			    slot))))
+				   (list
+				    part-concept-id
+				    (remove-if #'null
+					       (remove-if-not #'listp sub-part-tree)))))
+			     (get-concept-slot-tags concept-name concept-list xml-file-path)))))
+    (mapcar #'(lambda (c)
+		(list
+		 (first c)
+		 (mapcar #'(lambda (slot)
+			     (second slot))
+		 	 (second c))))
+	    second-part-list)))
+
+
 ;;; 概念がインスタンスであるか否かを取得
 (defun instance-concept-p (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
   (equalp "true"
@@ -152,8 +180,10 @@
         (convert-part-attribute-concept file-path ont)
 	(format t "Converting Instance concepts...~%")
 	(convert-instantiation file-path ont)
-	(format t "Finalize...~%")
 	(convert-basic-concept-node-id file-path ont)
+	(format t "Converting Sub-Part/Attribute-tree concepts...~%")
+	(convert-second-part-attribute-concept file-path ont)
+	(format t "Finalize...~%")
         (format t "~t~t Converted Concepts~%~t~t~t * ~{~A~^ ~}~%~%" (show-concepts ont)))
       file-path))
 
@@ -240,6 +270,57 @@
     	     (get-slot-tags c concept-list))
           finally (format nil "~A" (show-concepts ont)))
     ))
+
+;;; 部分/属性概念のさらにサブツリーの変換
+(defun convert-second-part-attribute-concept (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
+  (let* ((c-list (get-concept-label xml-file-path))
+	 (concept-list (get-concept-label xml-file-path)))
+    (loop for c in c-list ;; c mean anime title string
+	  when (get-concept-second-slot-tags c concept-list)
+          do (mapcar #'(lambda (slot)
+			 (let ((c-id (first slot))
+			       (c-content (second slot)))
+			   (mapcar #'(lambda (slot-content)
+    	     			       (let* ((concept-id
+				      		(princ-to-string
+	     			      		 (second
+	     			      		  (assoc "id" slot-content :test #'string=))))
+				      	      (role-name
+	     			      		(princ-to-string
+	     			      		 (second
+	     			      		  (assoc "role" slot-content :test #'string=))))
+    	     			      	      (class-const
+	     			      		(princ-to-string
+	     			      		 (second
+	     			      		  (assoc "class_constraint" slot-content :test #'string=))))
+    	     			      	      (rh-name
+	     			      		(princ-to-string
+	     			      		 (second
+	     			      		  (assoc "rh_name" slot-content :test #'string=))))
+    	     			      	      (cardinality
+	     			      		(format nil "~A"
+	     			      			(second
+	     			      			 (assoc "num" slot-content :test #'string=))))
+    	     			      	      (val
+	     			      		(format nil "~A"
+	     			      			(second
+	     			      			 (assoc "value" slot-content :test #'string=))))
+					      (new-sub-part-concept
+						(make-concept role-name :c-type :part-of-concept
+				       					:concept-id concept-id
+    	     			       					:class-restriction class-const
+    	     			       					:cardinality cardinality
+    	     			       					:rh-name rh-name
+    	     			       					:val val))
+					      (target-part-concept
+						(find-concept-from-id c-id)))
+					 (append-concept
+					  new-sub-part-concept
+					  target-part-concept)))
+				   c-content)))
+    		     (get-concept-second-slot-tags c concept-list))
+          finally (format nil "~A" (show-concepts ont)))))
+
 
 ;;; XMLリストから基本概念の親子関係を取得
 (defun get-child-parent (&optional (xml-file-path *default-ontology-file*))
