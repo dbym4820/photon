@@ -10,4 +10,5 @@ docs/*
 docs
 .DS_Store
 */.DS_Store
-*.shquicklisp/
+*.sh
+quicklisp/

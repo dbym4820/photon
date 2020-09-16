@@ -24,7 +24,7 @@
 
 ## Installation
 
-1. Install roswell via Homwbrew (or Linuxbrew)
+1. Install roswell via Homebrew (or Linuxbrew)
 
 ```
 # (For Linux: You have to install linuxbrew at first. See [Linuxbrew installation](https://github.com/Linuxbrew))
@@ -56,6 +56,14 @@ Please go to [this page](./roswell/).
 - [法造(Hozo) - Ontology Editor](http://www.hozo.jp/download_en.html)
 
 ### API for CommonLisp
+
+- Download ontology from github
+
+```
+CL-USER> (photon:install "dbym4820/ontologies/japanese-conversation/ontology3")
+```
+
+
 
 - Environment Initializer (Making .photon directory at home directory)
 

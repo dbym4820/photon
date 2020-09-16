@@ -33,6 +33,7 @@
   		:*default-ontology*
                 :*default-ontology-file*
 		;; concept class params
+		:concept-id
                 :concept-name
 		:class-restriction
 		:property-list
@@ -51,6 +52,7 @@
 		:show-all-class-concept
                 :show-all-instance
 		:find-concept
+                :find-concept-from-id
                 :find-attribute
 		:show-attribute
                 :get-restricted-concepts
@@ -87,10 +89,12 @@
 	   :show-all-class-concept
 	   :show-all-instance
            :find-concept
+	   :find-concept-from-id
 	   :find-attribute
            :show-attribute
            :get-restricted-concepts
 
+	   :concept-id
            :concept-name
 	   :property-list
 	   :child-concept-list
@@ -117,7 +121,7 @@
            :get-part-concept-info
            :get-single-restricted-concepts
            :get-restricted-concepts
-	   
+	   :get-concept-from-id
 	   :get-concept-type
 
 	   :init

@@ -97,12 +97,21 @@
 			      (get-specific-concept-tags concept-name concept-list xml-file-path)))))
 
 ;;; 概念がインスタンスであるか否かを取得
-(defun instance-concept-p (concept concept-list &optional (xml-file-path *default-ontology-file*))
+(defun instance-concept-p (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
   (equalp "true"
 	  (second
 	   (assoc "instantiation"
-		  (car (get-specific-concept-tags concept concept-list xml-file-path))
+		  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
 		  :test #'equalp))))
+
+;;; 指定したラベルを持つConceptのIDを取得
+(defun get-concept-id (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+  (second
+   (assoc "id"
+	  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
+	  :test #'equalp)))
+
+
 
 ;;; 指定基本概念のスロット内の1属性を抽出
 (defun get-attribute-from-slot-tags (concept-name attribute concept-list &optional (xml-file-path *default-ontology-file*))
@@ -118,6 +127,7 @@
 ;;; 指定された基本概念が持つスロット情報を取得
 (defun get-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
   (mapcar #'list
+	  (get-attribute-from-slot-tags concept-name "id" concept-list xml-file-path)
           (get-attribute-from-slot-tags concept-name "role" concept-list xml-file-path)
           (get-attribute-from-slot-tags concept-name "kind" concept-list xml-file-path)
           (get-attribute-from-slot-tags concept-name "class_constraint" concept-list xml-file-path)
@@ -132,6 +142,7 @@
 (defun convert-ontology-hozo (&key (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (if update
       (progn
+	(set-xml-struct file-path)
         (clear-ontology ont)
 	(format t "Converting Basic concepts...~%")
         (convert-basic-concept file-path ont)
@@ -142,6 +153,7 @@
 	(format t "Converting Instance concepts...~%")
 	(convert-instantiation file-path ont)
 	(format t "Finalize...~%")
+	(convert-basic-concept-node-id file-path ont)
         (format t "~t~t Converted Concepts~%~t~t~t * ~{~A~^ ~}~%~%" (show-concepts ont)))
       file-path))
 
@@ -167,7 +179,17 @@
 	      (find-concept parent-concept-label ont)
 	      (mapcar #'(lambda (c2)
 			  (find-concept c2 ont))
-		      child-concept-labels)))))
+		      child-concept-labels))))
+  (convert-basic-concept-node-id xml-file-path ont))
+
+;;; ノードIDの付与
+(defun convert-basic-concept-node-id (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
+  (let ((concept-label-list (show-concepts)))
+    (loop for c in concept-label-list
+	  unless (string= c "whole-root")
+	    do (setf (photon.ontology::concept-id (find-concept c ont))
+		     (get-concept-id c concept-label-list xml-file-path)))))
+
 
 ;;; instanceかどうかをチェック
 (defun convert-instantiation (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
@@ -183,7 +205,11 @@
     (loop for c in c-list ;; c mean anime title string
           do (mapcar #'(lambda (slot)
     	     		 (remove-if #'null
-    	     			    (let ((role-name
+    	     			    (let ((concept-id
+					    (princ-to-string
+	     				     (second
+	     				      (assoc "id" slot :test #'string=))))
+					  (role-name
 	     				    (princ-to-string
 	     				     (second
 	     				      (assoc "role" slot :test #'string=))))
@@ -205,6 +231,7 @@
 	     					     (assoc "value" slot :test #'string=)))))
     	     			      (append-concept
     	     			       (make-concept role-name :c-type :part-of-concept
+						               :concept-id concept-id
     	     						       :class-restriction class-const
     	     						       :cardinality cardinality
     	     						       :rh-name rh-name

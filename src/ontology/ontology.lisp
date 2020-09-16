@@ -7,6 +7,7 @@
            :*default-ontology-file*
 	   :set-default-ontology
 
+	   :concept-id
 	   :concept-name
 	   :property-list
 	   :child-concept-list
@@ -29,10 +30,10 @@
            :show-concepts
 	   :show-all-class-concept
 	   :show-all-instance
-	   :find-concept
+           :find-concept
+   	   :find-concept-from-id
            :find-attribute
            :show-attribute
-	   :get-restricted-concepts
 
 	   :get-concept-type
 	   
@@ -49,7 +50,6 @@
            :get-part-concept-info
            :get-single-restricted-concepts
            :get-restricted-concepts
-
 	   ))
 (in-package :photon.ontology)
 
@@ -67,7 +67,8 @@
 オントロジーに表れる概念クラスの定義
 |#
 (defclass concept ()
-  ((concept-name :initform "any" :initarg :name :accessor concept-name)))
+  ((concept-name :initform "any" :initarg :name :accessor concept-name)
+   (concept-id :initform nil :initarg :concept-id :accessor concept-id)))
 
 (defclass basic-concept (concept)
   ((property-list :initform nil :initarg :property :accessor property-list)
@@ -109,15 +110,31 @@
   (make-instance 'ontology :ontology-theme ontology-theme))
 
 ;;; 概念定義
-(defun make-concept (concept-name &key (c-type :basic-concept) (class-restriction (make-instance 'basic-concept)) (cardinality 1) (rh-name "") (val ""))
+(defun make-concept (concept-name &key (concept-id "")
+				    (c-type :basic-concept)
+				    (class-restriction (make-instance 'basic-concept))
+				    (cardinality 1)
+				    (rh-name "")
+				    (val ""))
   (cond ((eql c-type :basic-concept)
-         (make-instance 'basic-concept :name concept-name))
+         (make-instance 'basic-concept :name concept-name
+				       :concept-id concept-id))
         ((eql c-type :attribute-concept)
-         (make-instance 'attribute-concept :name concept-name :class-restriction class-restriction :cardinality cardinality :role-holder rh-name :val val))
+         (make-instance 'attribute-concept :concept-id concept-id
+					   :name concept-name
+					   :class-restriction class-restriction
+					   :cardinality cardinality
+					   :role-holder rh-name
+					   :val val))
         ((eql c-type :part-of-concept)
-         (make-instance 'part-of-concept :name concept-name :class-restriction class-restriction :cardinality cardinality :val val))
+         (make-instance 'part-of-concept :concept-id concept-id
+					 :name concept-name
+					 :class-restriction class-restriction
+					 :cardinality cardinality
+					 :val val))
         (t 
-         (make-instance 'basic-concept :name concept-name))))
+         (make-instance 'basic-concept :concept-id concept-id
+				       :name concept-name))))
 
 (defgeneric append-concept (concept ontology))
 
@@ -214,13 +231,20 @@ CLOSオントロジー操作用API
 	       (when (string= concept-name (concept-name c)) t))
 	   (show-ontology ont)))
 
+(defun find-concept-from-id (concept-id &optional (ont *default-ontology*))
+  (find-if #'(lambda (c)
+	       (when (string= concept-id (concept-id c)) t))
+	   (show-ontology ont)))
+
+
 
 ;;; CLOSオントロジーの各パラメータを文字列として表示
-(defgeneric show-attributes (concept &key))
+(defgeneric show-attribute (concept &key))
 (defmethod show-attribute ((concept basic-concept) &key (ont *default-ontology*))
   (declare (ignorable ont))
   (format nil
-	  "~%Concept name: ~A~%Included properties: ~A~%Instantiation: ~A~%Parent concept: ~A~%Child concepts: ~A~%"
+	  "~%Concept id: ~A~%Concept name: ~A~%Included properties: ~A~%Instantiation: ~A~%Parent concept: ~A~%Child concepts: ~A~%"
+	  (concept-id concept)
 	  (concept-name concept)
 	  (or
 	   (mapcar #'concept-name
@@ -236,7 +260,8 @@ CLOSオントロジー操作用API
   (declare (ignorable ont))
   (let ((concept (find-concept concept-string)))
     (format nil
-	    "~%Concept name: ~A~%Included properties: ~A~%Instantiation: ~A~%Parent concept: ~A~%Child concepts: ~A~%"
+	    "~%Concept id: ~A~%Concept name: ~A~%Included properties: ~A~%Instantiation: ~A~%Parent concept: ~A~%Child concepts: ~A~%"
+	    (concept-id concept)
 	    (concept-name concept)
 	    (or
 	     (mapcar #'concept-name
@@ -251,7 +276,8 @@ CLOSオントロジー操作用API
 (defmethod show-attribute ((concept non-basic-concept) &key (ont *default-ontology*))
   (declare (ignorable ont))
   (format nil
-	  "~%Role name: ~A~%Class restriction: ~A~%Cardinality: ~A~%value: ~A~%"
+	  "~%Concpet id: ~A~%Role name: ~A~%Class restriction: ~A~%Cardinality: ~A~%value: ~A~%"
+	  (concept-id concept)
 	  (concept-name concept)
 	  (class-restriction concept)
 	  (cardinality concept)
@@ -314,6 +340,12 @@ CLOSオントロジー操作用API
   "基本概念が備える部分概念のクラス制約を取得"
   (mapcar #'class-restriction
 	  (remove-if #'null (property-list (find-concept concept-name-string)))))
+
+(defun get-part-concept-id (concept-name-string)
+  "基本概念が備える部分概念のクラス制約を取得"
+  (mapcar #'concept-id
+	  (remove-if #'null (property-list (find-concept concept-name-string)))))
+
 
 (defun get-part-concepts-role-name (concept-name-string)
   "基本概念が備える部分概念のロール概念を取得"
