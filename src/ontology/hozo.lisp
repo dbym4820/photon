@@ -108,8 +108,8 @@
 (defun get-concept-id (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
   (second
    (assoc "id"
-	  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
-	  :test #'equalp)))
+  	  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
+  	  :test #'equalp)))
 
 
 
@@ -184,7 +184,7 @@
 
 ;;; ノードIDの付与
 (defun convert-basic-concept-node-id (&optional (xml-file-path *default-ontology-file*) (ont *default-ontology*))
-  (let ((concept-label-list (show-concepts)))
+  (let ((concept-label-list (get-concept-label xml-file-path)))
     (loop for c in concept-label-list
 	  unless (string= c "whole-root")
 	    do (setf (photon.ontology::concept-id (find-concept c ont))
