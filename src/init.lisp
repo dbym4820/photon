@@ -173,18 +173,34 @@ Initialization
 (defsetter set-result "tmp-result")
 (defsetter set-ontology-details "ontology-details")
 
-(defun set-ontology (ontology-file-path-string &key other-name overwrite)
+(defun set-ontology (ontology-file-path-string &key other-name overwrite without-directory)
   "this setter is special one amoung photon.init"
-  (copy-file (truename ontology-file-path-string)
-	     (concatenate 'string
-			  +photon-user-ontology-directory+
-			  (if other-name
-			      other-name
-			      (concatenate 'string
-					   (pathname-name ontology-file-path-string)
-					   "."
-					   (pathname-type ontology-file-path-string))))
-	     :overwrite overwrite)
+  (cond (without-directory
+	    (copy-file (truename ontology-file-path-string)
+		       (concatenate 'string
+				    +photon-user-ontology-directory+
+				    (if other-name
+					other-name
+					(concatenate 'string
+						     (pathname-name ontology-file-path-string)
+						     "."
+						     (pathname-type ontology-file-path-string))))
+		       :overwrite overwrite))
+	((null without-directory)
+	    (copy-file (truename ontology-file-path-string)
+		       (concatenate 'string
+				    +photon-user-ontology-directory+
+				    (if other-name
+					other-name
+					(concatenate 'string
+						     (reduce #'(lambda (s1 s2)
+								 (concatenate 'string s1 "/" s2))
+							     (cdr (pathname-directory (truename ontology-file-path-string))))
+						     "/"
+						     (pathname-name ontology-file-path-string)
+						     "."
+						     (pathname-type ontology-file-path-string))))
+		       :overwrite overwrite)))
   (format t "Ontology ~A has registered successfully!~%"
 	  (concatenate 'string
 		       (pathname-name ontology-file-path-string)
