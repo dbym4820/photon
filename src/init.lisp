@@ -204,7 +204,8 @@ Initialization
 							 (concatenate 'string s1 "/" s2))
 						     (cdr (pathname-directory file-pathspec)))
 					     "/"))
-			    file-name))))
+			    file-name)
+	       (truename ontology-file-path-string))))
     (if with-new-directory
     	(progn
     	  (make-directories to-directory-pathname)
