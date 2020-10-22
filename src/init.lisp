@@ -205,7 +205,7 @@ Initialization
 						     (cdr (pathname-directory file-pathspec)))
 					     "/"))
 			    file-name)
-	       file-pathspec)))
+	       (truename ontology-file-path-string))))
     (if with-new-directory
     	(progn
     	  (make-directories to-directory-pathname)
