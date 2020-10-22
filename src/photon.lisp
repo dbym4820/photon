@@ -159,7 +159,7 @@
 (defun convert-ontology (&key (ontology-type :hozo) (file-path *main-ontology*) (ont *default-ontology*) (update t))
   (case ontology-type
     (:hozo
-     (format t "Convert as Hozo formed ontology~%")
+     (format t "~%Convert as Hozo formed ontology~%")
      (convert-ontology-hozo :file-path file-path :ont ont :update update)
      (set-result "concept-list"
 		 (format nil "~{~A~^ ~}" (show-concepts))))
@@ -196,7 +196,7 @@
   (progn
     (install-ontology ontology-repository-name)
     (set-config "main-ontology" (installed-directory-name ontology-repository-name))
-    (update-main-ontology)
+   (update-main-ontology)
     (format t "Ontology is Downloaded in ~A~%" (get-config "main-ontology"))
     (prog1
 	(convert-ontology)
