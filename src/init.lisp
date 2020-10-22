@@ -204,7 +204,8 @@ Initialization
 							 (concatenate 'string s1 "/" s2))
 						     (cdr (pathname-directory file-pathspec)))
 					     "/"))
-			    file-name))))
+			    file-name)
+	       file-pathspec)))
     (if with-new-directory
     	(progn
     	  (make-directories to-directory-pathname)
