@@ -173,42 +173,52 @@ Initialization
 (defsetter set-result "tmp-result")
 (defsetter set-ontology-details "ontology-details")
 
-(defun set-ontology (ontology-file-path-string &key other-name overwrite (with-new-directory t))
+(defun set-ontology (ontology-file-path-string &key other-name (overwrite t) (with-new-directory t) remote-repository)
   "this setter is special one amoung photon.init"
-  (let ((default-pathname
-	  (concatenate 'string
-		       +photon-user-ontology-directory+
-		       (when other-name
-			 other-name)))
-	(directory-pathname
-	  (concatenate 'string
-		       +photon-user-ontology-directory+
-		       (if other-name
-			   other-name
-			   (concatenate 'string
-					(reduce #'(lambda (s1 s2)
-						    (concatenate 'string s1 "/" s2))
-						(cdr (pathname-directory (truename ontology-file-path-string))))
-					"/"))))
-	(file-name
-	  (concatenate 'string
-		       (pathname-name ontology-file-path-string)
-		       "."
-		       (pathname-type ontology-file-path-string))))
+  (let* ((file-pathspec (pathname ontology-file-path-string))
+	 (to-directory-pathname
+	   (concatenate 'string
+			+photon-user-ontology-directory+
+			(if other-name
+			    other-name
+			    (concatenate 'string
+					 (reduce #'(lambda (s1 s2)
+						     (concatenate 'string s1 "/" s2))
+						 (cdr (pathname-directory file-pathspec)))
+					 "/"))))
+	 (file-name
+	   (concatenate 'string
+			(pathname-name file-pathspec)
+			"."
+			(or
+			 (pathname-type file-pathspec)
+			 "xml")))
+	 (ontology-file-path
+	   (if remote-repository
+	       (concatenate 'string
+			    (namestring +photon-user-ontology-directory+)
+			    (if other-name
+				other-name
+				(concatenate 'string
+					     (reduce #'(lambda (s1 s2)
+							 (concatenate 'string s1 "/" s2))
+						     (cdr (pathname-directory file-pathspec)))
+					     "/"))
+			    file-name))))
     (if with-new-directory
-	(progn
-	  (make-directories directory-pathname)
-	  (copy-file (truename ontology-file-path-string)
-		     (concatenate 'string
-				  directory-pathname
-				  file-name)
-		     :overwrite overwrite))
-	(copy-file (truename ontology-file-path-string)
-		   (concatenate 'string
-				default-pathname
-				file-name)
-		   :overwrite overwrite))
-    (format t "Ontology ~A has registered successfully!~%" file-name)))	
+    	(progn
+    	  (make-directories to-directory-pathname)
+    	  (copy-file ontology-file-path
+    		     (concatenate 'string
+    				  to-directory-pathname
+    				  file-name)
+    		     :overwrite overwrite))
+    	(copy-file ontology-file-path
+    		   (concatenate 'string
+    				+photon-user-ontology-directory+
+    				file-name)
+    		   :overwrite overwrite))
+    (format t "Ontology ~A has registered successfully!~%" file-name)))
 
 (defun list-ontology ()
   (let ((ontology-list nil))
@@ -240,6 +250,7 @@ Initialization
 		+photon-project-ontology-directory+
 		"sample-ontology.xml")
    :with-new-directory nil
+   :remote-repository nil
    :overwrite t)
   (format t "Following ontology has registered as default... ~%~{~t~t * ~@A~^~%~}~%"
 	  (list-ontology)))
