@@ -173,39 +173,42 @@ Initialization
 (defsetter set-result "tmp-result")
 (defsetter set-ontology-details "ontology-details")
 
-(defun set-ontology (ontology-file-path-string &key other-name overwrite without-directory)
+(defun set-ontology (ontology-file-path-string &key other-name overwrite (with-new-directory t))
   "this setter is special one amoung photon.init"
-  (cond (without-directory
-	    (copy-file (truename ontology-file-path-string)
-		       (concatenate 'string
-				    +photon-user-ontology-directory+
-				    (if other-name
-					other-name
-					(concatenate 'string
-						     (pathname-name ontology-file-path-string)
-						     "."
-						     (pathname-type ontology-file-path-string))))
-		       :overwrite overwrite))
-	((null without-directory)
-	    (copy-file (truename ontology-file-path-string)
-		       (concatenate 'string
-				    +photon-user-ontology-directory+
-				    (if other-name
-					other-name
-					(concatenate 'string
-						     (reduce #'(lambda (s1 s2)
-								 (concatenate 'string s1 "/" s2))
-							     (cdr (pathname-directory (truename ontology-file-path-string))))
-						     "/"
-						     (pathname-name ontology-file-path-string)
-						     "."
-						     (pathname-type ontology-file-path-string))))
-		       :overwrite overwrite)))
-  (format t "Ontology ~A has registered successfully!~%"
+  (let ((default-pathname
+	  (concatenate 'string
+		       +photon-user-ontology-directory+
+		       (when other-name
+			 other-name)))
+	(directory-pathname
+	  (concatenate 'string
+		       +photon-user-ontology-directory+
+		       (if other-name
+			   other-name
+			   (concatenate 'string
+					(reduce #'(lambda (s1 s2)
+						    (concatenate 'string s1 "/" s2))
+						(cdr (pathname-directory (truename ontology-file-path-string))))
+					"/"))))
+	(file-name
 	  (concatenate 'string
 		       (pathname-name ontology-file-path-string)
 		       "."
 		       (pathname-type ontology-file-path-string))))
+    (if with-new-directory
+	(progn
+	  (make-directories directory-pathname)
+	  (copy-file (truename ontology-file-path-string)
+		     (concatenate 'string
+				  directory-pathname
+				  file-name)
+		     :overwrite overwrite))
+	(copy-file (truename ontology-file-path-string)
+		   (concatenate 'string
+				default-pathname
+				file-name)
+		   :overwrite overwrite))
+    (format t "Ontology ~A has registered successfully!~%" file-name)))	
 
 (defun list-ontology ()
   (let ((ontology-list nil))
@@ -236,6 +239,7 @@ Initialization
    (concatenate 'string
 		+photon-project-ontology-directory+
 		"sample-ontology.xml")
+   :with-new-directory nil
    :overwrite t)
   (format t "Following ontology has registered as default... ~%~{~t~t * ~@A~^~%~}~%"
 	  (list-ontology)))
