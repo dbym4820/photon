@@ -29,18 +29,19 @@
 		 (:module "install"
 		  :components
 		  ((:file "install")))
+		 (:module "system-module"
+		  :components
+		  ((:file "module")))
+		 (:module "gui"
+		  :components
+		  ((:file "gui" :depends-on ("server"))
+		   (:file "server")))
 		 (:module "ontology"
 		  :components
                   ((:file "ontology")
 		   (:file "hozo" :depends-on ("ontology"))
 		   (:file "owl" :depends-on ("ontology"))
 		   (:file "rdf" :depends-on ("ontology"))))
-		 (:module "system-module"
-		  :components
-		  ((:file "module")))
-		 (:module "gui"
-		  :components
-		  ((:file "gui")))
 		 (:module "launcher"
 		  :components
 		  ((:file "launcher")))
