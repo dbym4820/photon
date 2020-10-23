@@ -131,7 +131,7 @@
 	   :get-env
 	   :get-config
 	   :get-ontology
-	   :set-ontology
+
 	   :list-ontology
            :find-ontology-path
 	   :delete-photon-directory
@@ -142,6 +142,8 @@
 	   :launch-gui
 	   :defphoton-route
 
+           :set-local-ontology
+   
 	   :viewer
 
 	   :run
@@ -178,7 +180,7 @@
 
 (defun init (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (photon-env-init)
-  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology"))
+  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
   (update-main-ontology)
   (prog1
       (convert-ontology :ontology-type ontology-type
@@ -204,14 +206,22 @@
    (update-main-ontology)
     (format t "Ontology is Downloaded in ~A~%" (get-config "main-ontology"))
     (prog1
-	(convert-ontology)
+	(convert-ontology :update t)
       (get-all-converted-ontology-details))))
 
-(defun switch-main-ontology (ontology-name)
-  (set-config "main-ontology" ontology-name)
+
+(defun set-local-ontology (ontology-pathname &optional other-name)
+  (set-ontology ontology-pathname :other-name other-name)
+  (switch-main-ontology (caar (last (photon:list-ontology))) (cadar (last (photon:list-ontology)))))
+
+
+(defun switch-main-ontology (ontology-name &optional file-name)
+  (set-config "main-ontology" (if file-name file-name ontology-name))
   (update-main-ontology)
   (prog1
-      (convert-ontology)
+      (if file-name
+	  (convert-ontology :file-path file-name :update t)
+	  (convert-ontology))
     (get-all-converted-ontology-details)))
 
 (defun viewer (command &optional optional-command)
