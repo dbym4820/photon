@@ -14,6 +14,9 @@
 		:define-entry-point
 		:make-window
 		:show)
+  (:import-from :photon.server
+		:start-photon-server
+		:stop-photon-server)
   (:export
    :photon-gui-setup
    :launch-gui))
@@ -50,7 +53,7 @@ Ceramic Windowの設定
 (defun photon-gui-setup ()
   (ceramic:setup))
 
-(defun launch-gui ()
+(defun start-window ()
   (handler-case (run-server)
     (usocket:address-in-use-error ()
       t))
@@ -98,3 +101,13 @@ Ceramic Windowの設定
 
 (defun stop-server ()
   (clack:stop *photon-gui-server*))
+
+
+(defun launch-gui (command)
+  (cond ((eql command :start-server)
+	;;(start-window)
+	 (start-photon-server))
+	((eql command :stop-server)
+	 (stop-photon-server))
+	(t
+	 (format nil "no command"))))

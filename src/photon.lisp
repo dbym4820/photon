@@ -75,6 +75,8 @@
 		:installed-directory-name)
   (:import-from :photon.launcher
 		:photon-launcher)
+  (:import-from :photon.server
+		:defphoton-route)
   (:import-from :photon.viewer
 		:photon-viewer)
   (:import-from :photon.gui
@@ -136,6 +138,9 @@
 	   
 	   :install
 	   :switch-main-ontology
+
+	   :launch-gui
+	   :defphoton-route
 
 	   :viewer
 
