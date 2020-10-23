@@ -1,0 +1,8 @@
+Usage:
+
+To set local ontology:
+   photon local /path/to/ontology/file.xml
+
+   like below
+
+   	photon local ~/ontologies/anime-ontology/anime-ontology

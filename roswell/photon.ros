@@ -21,6 +21,8 @@ exec ros -Q -- $0 "$@"
 		:init
 		:install
 		:viewer
+		:launch-gui
+		:set-local-ontology
 		:run
 	       ))
 (in-package #:ros.script.photon)
@@ -37,14 +39,16 @@ exec ros -Q -- $0 "$@"
         (third-option (third argv))
         (fourth-option (fourth argv)))
     (declare (ignorable first-option second-option third-option fourth-option))
-    (cond ((option-eq first-option nil)
-	   ;; 引数なしのとき
-	   (format t "~A~%" (help-sentence)))
-	  ((option-eq first-option '("--list-ontology" "-lo"))
+    (cond ((option-eq first-option '("main-ontology" "--main-ontology" "-mo"))
 	   ;; オントロジーのリスト表示
-	   (format t "~{~A~%~}" (list-ontology)))
+	   (format t "current main ontology~%~4T->  ~A"
+		   (viewer "current/ontology")))
+	  ((option-eq first-option '("list-ontology" "--list-ontology" "-lo"))
+	   ;; オントロジーのリスト表示
+	   (format t "listing registered ontologies below.~%~{~{~4T~A --> ~A~} ~%~}" (list-ontology)))
 	  ((option-eq first-option '("init" "--init" "-i"))
-	   (init))
+	   ;; オントロジーコンバーティングの初期化
+	   (init :update t))
 	  ((option-eq first-option '("install" "--install" "-i"))
 	   ;; オントロジーのダウンロード
 	   (if second-option
@@ -54,22 +58,37 @@ exec ros -Q -- $0 "$@"
 	   ;; コンバート済みオントロジー内の概念の詳細検索
 	   (if second-option
 	       (format t "~A~%"
-		       (viewer "ontology/details" second-option))
-	       (viewer "help/viewer")))
-	  ((option-eq first-option '("help" "--help" "-h"))
-	   ;; ヘルプ
-	   (format t "~A~%" (viewer "help/system")))
-	  ((option-eq first-option '("--file" "-f"))
+		       (handler-case
+			   (viewer "ontology/details" second-option)
+			 (error ()
+			   "no concept founded")))
+	       (viewer "help/details")))
+	  ((option-eq first-option '("file" "--file" "-f"))
 	   ;; ファイルを指定してオントロジーの基本概念一覧を表示
            (convert-ontology :file-path second-option)
            (format t "~{~A~^, ~}~%" (remove "whole-root" (show-concepts) :test #'string=)))
-          ((option-eq first-option '("show" "--show-all-concept" "-s"))
-	   ;; ファイルを指定せずにオントロジーの基本概念一覧を表示
-           (format t "~{~A~^, ~}~%" (viewer "concept-list")))
-	  ((option-eq first-option '("--child" "-c"))
+          ((option-eq first-option '("show-all-concepts" "--show-all-concepts" "-s"))
+	   ;; すべての概念定義を見る
+           (format t "~A" (viewer "result/concept-list")))
+	  ((option-eq first-option '("get-child" "--get-child" "-ch"))
+	   ;; 子概念を調べる
 	   (format t "~A~%" (viewer "help/system")))
+	  ((option-eq first-option '("start-server" "--start-server" "-sts"))
+	   ;; Webサーバーの起動
+	   (init :file-path (viewer "current/ontology") :update t)
+	   (launch-gui :start-server 5050)
+	   (loop))
+	  ((option-eq first-option '("local" "--set-local-ontology" "-slo"))
+	   ;; ローカルのオントロジーファイルを読み込んで使う
+	   (if second-option
+	       (set-local-ontology second-option)
+	       (viewer "help/set-local-ontology")))	  
 	  ((option-eq first-option '("version" "--version" "-v"))
+	   ;; Photonシステムのバージョン
 	   (format t "~A~%" (viewer "config/version")))
+	  ((option-eq first-option '("help" "--help" "-h"))
+	   ;; ヘルプ
+	   (format t "~A~%" (viewer "help/system")))
 	  (t
-	   ;; 入力ミス
+	   ;; 入力ミス用
            (format t "~A~%" (viewer "help/system"))))))
