@@ -23,3 +23,21 @@ e.g.
 ```
 ~ $ photon list-ontology
 ```
+
+## View All Concepts of an Ontology
+
+```
+~ $ photon show
+```
+
+## Set Local Ontology
+
+```
+~ $ photon local ~/ontology/sample.xml
+```
+
+## Activate JSON Rest server
+
+```
+~ $ photon start-server
+```
