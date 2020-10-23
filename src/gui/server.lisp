@@ -51,10 +51,12 @@
 
 ;;; server main
 (defparameter *photon-server* nil)
+(defparameter *default-photon-server-port* 5050)
 (defparameter *photon-server-app* (make-instance 'ningle:<app>))
-(defun start-photon-server ()
+(defun start-photon-server (&optional port)
   (setf *photon-server*
-	(clack:clackup *photon-server-app* :port 5050)))
+	(clack:clackup *photon-server-app* :port
+		       (or port *default-photon-server-port*))))
 (defun stop-photon-server ()
   (clack:stop *photon-server*))
   
