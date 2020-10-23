@@ -103,10 +103,10 @@ Ceramic Windowの設定
   (clack:stop *photon-gui-server*))
 
 
-(defun launch-gui (command)
+(defun launch-gui (command &optional option)
   (cond ((eql command :start-server)
 	;;(start-window)
-	 (start-photon-server))
+	 (start-photon-server option))
 	((eql command :stop-server)
 	 (stop-photon-server))
 	(t
