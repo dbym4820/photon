@@ -180,7 +180,8 @@
 
 (defun init (&key (ontology-type :hozo) (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (photon-env-init)
-  (set-config "main-ontology" (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
+  (set-config "main-ontology"
+	      (format nil "~A~A" +photon-user-ontology-directory+ "sample-ontology.xml"))
   (update-main-ontology)
   (prog1
       (convert-ontology :ontology-type ontology-type

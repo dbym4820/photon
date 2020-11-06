@@ -12,7 +12,7 @@
 (in-package :photon.server)
 
 ;;; functions for generate json
-(defun find-concept-from-string (arg)
+(defun make-concept-from-string (arg)
   (if (photon.ontology:find-concept arg)
       (let* ((concept-info (photon.ontology:find-concept arg))
   	     (concept-name (photon.ontology:concept-name concept-info))
@@ -33,8 +33,8 @@
       (format nil "{ ~A }" (photon.ontology:find-concept arg))))
 
   
-(defun find-concept-from-id (arg)
-  (if (photon.ontology:find-concept arg)
+(defun make-concept-from-id (arg)
+  (if (photon.ontology:find-concept-from-id arg)
       (let* ((concept-info (photon.ontology:find-concept-from-id arg))
 	     (concept-name (photon.ontology:concept-name concept-info))
 	     (concept-id (photon.ontology:concept-id concept-info))
@@ -81,7 +81,7 @@
 (defphoton-route "/concept-name/:concept" (param)
   (format nil "~A"
 	  (handler-case
-	      (find-concept-from-string
+	      (make-concept-from-string
 	       (cdr (assoc 'concept param :test #'string=)))
 	    (error (e)
 	      (declare (ignore e))
@@ -90,7 +90,7 @@
 (defphoton-route "/concept-id/:concept" (param)
   (format nil "~A"
 	  (handler-case
-	      (find-concept-from-id
+	      (make-concept-from-id
 	       (cdr (assoc 'concept param :test #'string=)))
 	    (error (e)
 	      (declare (ignore e))

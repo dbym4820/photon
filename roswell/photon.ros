@@ -39,7 +39,10 @@ exec ros -Q -- $0 "$@"
         (third-option (third argv))
         (fourth-option (fourth argv)))
     (declare (ignorable first-option second-option third-option fourth-option))
-    (cond ((option-eq first-option '("main-ontology" "--main-ontology" "-mo"))
+    (cond ((option-eq first-option nil)
+	   ;; 引数なしのとき
+	   (format t "~A~%" (viewer "help/system")))
+	  ((option-eq first-option '("main-ontology" "--main-ontology" "-mo"))
 	   ;; オントロジーのリスト表示
 	   (format t "current main ontology~%~4T->  ~A"
 		   (viewer "current/ontology")))
