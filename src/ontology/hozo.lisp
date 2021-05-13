@@ -3,6 +3,7 @@
   (:use :cl)
   (:import-from :alexandria
                 :read-file-into-string
+		:flatten
 		:write-string-into-file)
   (:import-from :split-sequence
 		:split-sequence)
@@ -28,117 +29,116 @@
 |#
 
 ;;; オントロジーファイルをXMLリストに変換
-(defun convert-ontology-xml (file-path)
-  (setf *default-ontology-file* file-path)
-  (xmls:parse-to-list (read-file-into-string file-path) :compress-whitespace t))
+;; (defun convert-ontology-xml (file-path)
+;;   (setf *default-ontology-file* file-path)
+;;   (xmls:parse-to-list (read-file-into-string file-path) :compress-whitespace t))
 
-;;; ファイル名の取得
-(defun get-expected-file-name-tags (&optional (xml-file-path *default-ontology-file*))
-  (second (second (second (convert-ontology-xml xml-file-path)))))
+;; ;;; ファイル名の取得
+;; (defun get-expected-file-name-tags (&optional (xml-file-path *default-ontology-file*))
+;;   (second (second (second (convert-ontology-xml xml-file-path)))))
 
-;;; オントロジーIDの取得
-(defun get-ont-id-tag (&optional (xml-file-path *default-ontology-file*))
-  (second (first (second (convert-ontology-xml xml-file-path)))))
+;; ;;; オントロジーIDの取得
+;; (defun get-ont-id-tag (&optional (xml-file-path *default-ontology-file*))
+;;   (second (first (second (convert-ontology-xml xml-file-path)))))
 
-;;; 概念定義本体の取得
-(defun get-w-concept-tags (&optional (xml-file-path *default-ontology-file*))
-  (cdr (remove-if #'null (fourth (convert-ontology-xml xml-file-path)))))
+;; ;;; 概念定義本体の取得
+;; (defun get-w-concept-tags (&optional (xml-file-path *default-ontology-file*))
+;;   (cdr (remove-if #'null (fourth (convert-ontology-xml xml-file-path)))))
 
-;;; リストが示すXMLタグ名を取得
-(defun get-tag-name (tag-list)
-  (first tag-list))
+;; ;;; リストが示すXMLタグ名を取得
+;; (defun get-tag-name (tag-list)
+;;   (first tag-list))
 
-;;; ConceptXMLのリストが指定したタグのものかを判別
-(defun tag-p (tag-string target-list)
-  (when (and (listp target-list) (stringp (car target-list)))
-    (when (and (string= tag-string (get-tag-name target-list)))
-      t)))
+;; ;;; ConceptXMLのリストが指定したタグのものかを判別
+;; (defun tag-p (tag-string target-list)
+;;   (when (and (listp target-list) (stringp (car target-list)))
+;;     (when (and (string= tag-string (get-tag-name target-list)))
+;;       t)))
 
-;;; Conceptを表す塊のリストを取得
-(defun get-concept-tags (&optional (xml-file-path *default-ontology-file*))
-  (remove-if #'null
-	     (mapcar #'(lambda (tag-list)
-			 (when (string= (get-tag-name tag-list) "CONCEPT")
-			   (cdr tag-list)))
-		     (get-w-concept-tags xml-file-path))))
+;; ;;; Conceptを表す塊のリストを取得
+;; (defun get-concept-tags (&optional (xml-file-path *default-ontology-file*))
+;;   (remove-if #'null
+;; 	     (mapcar #'(lambda (tag-list)
+;; 			 (when (string= (get-tag-name tag-list) "CONCEPT")
+;; 			   (cdr tag-list)))
+;; 		     (get-w-concept-tags xml-file-path))))
 
 ;;; 各Conceptのラベル（名前）リストを取得
-(defun get-concept-label (&optional (xml-file-path *default-ontology-file*))
-   (mapcar #'(lambda (concept-tag-list)
-	      (second (let ((concept-info
-			      (mapcar #'(lambda (tag-list)
-					  (when (tag-p "LABEL" tag-list)
-					    tag-list))
-				      concept-tag-list)))
-			(remove-if #'null (second concept-info)))))
-	   (get-concept-tags xml-file-path)))
+;; (defun get-concept-label (&optional (xml-file-path *default-ontology-file*))
+;;    (mapcar #'(lambda (concept-tag-list)
+;; 	      (second (let ((concept-info
+;; 			      (mapcar #'(lambda (tag-list)
+;; 					  (when (tag-p "LABEL" tag-list)
+;; 					    tag-list))
+;; 				      concept-tag-list)))
+;; 			(remove-if #'null (second concept-info)))))
+;; 	   (get-concept-tags xml-file-path)))
 
 ;;; 概念定義の先頭からの出現番号
 ;; (defun get-concept-position-from-ahead (concept-name &optional (xml-file-path *default-ontology-file*))
 ;;   (position concept-name (get-concept-label xml-file-path) :test #'string=))
-(defun get-concept-position-from-ahead (concept-name concept-list)
-  (position concept-name concept-list :test #'string=))
+;; (defun get-concept-position-from-ahead (concept-name concept-list)
+;;   (position concept-name concept-list :test #'string=))
 
 
-;;; 特定概念の塊リストを取り出す
-(defun get-specific-concept-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (remove-if #'null
-	     (nth
-	      (get-concept-position-from-ahead concept-name concept-list)
-	      (get-concept-tags xml-file-path))))
+;; ;;; 特定概念の塊リストを取り出す
+;; (defun get-specific-concept-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+;;   (remove-if #'null
+;; 	     (nth
+;; 	      (get-concept-position-from-ahead concept-name concept-list)
+;; 	      (get-concept-tags xml-file-path))))
   
-;;; 部分/属性概念のリストを取得
-(defun get-concept-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (remove-if #'null
-	     (mapcar #'(lambda (slot)
-			 (when (tag-p "SLOT" slot)
-			   slot))
-		     (find-if #'(lambda (concept-tag)
-				  (when (tag-p "SLOTS" concept-tag) t))
-			      (get-specific-concept-tags concept-name concept-list xml-file-path)))))
+;; ;;; 部分/属性概念のリストを取得
+;; (defun get-concept-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+;;   (remove-if #'null
+;; 	     (mapcar #'(lambda (slot)
+;; 			 (when (tag-p "SLOT" slot)
+;; 			   slot))
+;; 		     (find-if #'(lambda (concept-tag)
+;; 				  (when (tag-p "SLOTS" concept-tag) t))
+;; 			      (get-specific-concept-tags concept-name concept-list xml-file-path)))))
 
-;;; ２段めの部分・属性概念のリストを取得
-(defun get-concept-second-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (let ((second-part-list
-	  (remove-if #'(lambda (c)
-			 (unless (second c) t)) ;; サブツリーがなければ削除
-		     (mapcar #'(lambda (slot)
-				 (let ((part-concept-id ;; パート概念のID
-					 (second (assoc "id" (second slot) :test #'string=)))
-				       (sub-part-tree
-  					 (when (tag-p "SLOT" slot)
-  					   (find-if #'(lambda (concept-tag)
-  			 				(when (tag-p "SLOTS" concept-tag) t))
-			 			    slot))))
-				   (list
-				    part-concept-id
-				    (remove-if #'null
-					       (remove-if-not #'listp sub-part-tree)))))
-			     (get-concept-slot-tags concept-name concept-list xml-file-path)))))
-    (mapcar #'(lambda (c)
-		(list
-		 (first c)
-		 (mapcar #'(lambda (slot)
-			     (second slot))
-		 	 (second c))))
-	    second-part-list)))
+;; ;;; ２段めの部分・属性概念のリストを取得
+;; (defun get-concept-second-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+;;   (let ((second-part-list
+;; 	  (remove-if #'(lambda (c)
+;; 			 (unless (second c) t)) ;; サブツリーがなければ削除
+;; 		     (mapcar #'(lambda (slot)
+;; 				 (let ((part-concept-id ;; パート概念のID
+;; 					 (second (assoc "id" (second slot) :test #'string=)))
+;; 				       (sub-part-tree
+;;   					 (when (tag-p "SLOT" slot)
+;;   					   (find-if #'(lambda (concept-tag)
+;;   			 				(when (tag-p "SLOTS" concept-tag) t))
+;; 			 			    slot))))
+;; 				   (list
+;; 				    part-concept-id
+;; 				    (remove-if #'null
+;; 					       (remove-if-not #'listp sub-part-tree)))))
+;; 			     (get-concept-slot-tags concept-name concept-list xml-file-path)))))
+;;     (mapcar #'(lambda (c)
+;; 		(list
+;; 		 (first c)
+;; 		 (mapcar #'(lambda (slot)
+;; 			     (second slot))
+;; 		 	 (second c))))
+;; 	    second-part-list)))
 
 
 ;;; 概念がインスタンスであるか否かを取得
-(defun instance-concept-p (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (equalp "true"
-	  (second
-	   (assoc "instantiation"
-		  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
-		  :test #'equalp))))
+;; (defun instance-concept-p (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+;;   (equalp "true"
+;; 	  (second
+;; 	   (assoc "instantiation"
+;; 		  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
+;; 		  :test #'equalp))))
 
 ;;; 指定したラベルを持つConceptのIDを取得
-(defun get-concept-id (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (second
-   (assoc "id"
-  	  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
-  	  :test #'equalp)))
-
+;; (defun get-concept-id (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
+;;   (second
+;;    (assoc "id"
+;;   	  (car (get-specific-concept-tags concept-name concept-list xml-file-path))
+;;   	  :test #'equalp)))
 
 
 ;;; 指定基本概念のスロット内の1属性を抽出
@@ -170,8 +170,8 @@
 (defun convert-ontology-hozo (&key (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
   (if update
       (progn
-	(set-xml-struct file-path)
         (clear-ontology ont)
+	(set-xml-struct file-path)
 	(format t "Converting Basic concepts...~%")
         (convert-basic-concept file-path ont)
 	(format t "Converting IS-A relations...~%")
@@ -357,9 +357,11 @@
 
 
 #|------------------------------------------------------------------------------|#
-#|------------------ XMLオブジェクトとの対応を保ったままにする -----------------|#
+#|------------------ XMLオブジェクトとの対応を保ったままにする(構造体で再実装) -----------------|#
 ;; tessutoyou
 ;; (photon.hozo::renew-xml-struct (photon.hozo::xml-objector "/Users/tomoki/Desktop/ontology.xml"))
+
+;; (photon.hozo::set-xml-struct "/Users/tomoki/Dropbox/Project-Myself/photon/src/ontology/ontology/sample-ontology.xml")
 
 (defparameter *xml-struct* nil)
 (defparameter *newest-hozo-file-path* nil)
@@ -374,6 +376,10 @@
 (defun find-ont-id-struct (xml-struct)
   (second (assoc "ont_id" (xmls:node-attrs xml-struct) :test #'string=)))
 
+(defun find-ont-filename-struct (xml-struct)
+  (second (assoc "filename" (xmls:node-attrs xml-struct) :test #'string=)))
+
+
 #|--------------- 抽出機(基本概念（CONCEPT））を前提 |#
 ;;; 特定ノード（Struct）のラベルを抽出
 (defun extract-node-label (node-struct)
@@ -384,8 +390,9 @@
 			    (car (xmls:node-children node))))
 		      (xmls:node-children node-struct)))))
 
-;;; 特定ノード（Struct）の座標を抽出
+
 (defun extract-node-position (node-struct)
+  "特定ノード（Struct）の座標を抽出"
   (car
    (remove-if #'null
 	      (mapcar #'(lambda (node)
@@ -394,23 +401,25 @@
 		      (xmls:node-children node-struct)))))
 
 
-;;; 特定ノード（Struct）のIDを抽出
 (defun extract-node-id (node-struct)
+  "特定ノード（Struct）のIDを抽出"
   (let ((id (assoc "id" (xmls:node-attrs node-struct) :test #'string=)))
     (when id (second id))))
 
-;;; 特定ノード（Struct）のinstantiationを抽出
 (defun extract-node-instantiation (node-struct)
+  "特定ノード（Struct）のinstantiationを抽出"
   (let ((inst (assoc "instantiation" (xmls:node-attrs node-struct) :test #'string=)))
     (when inst (second inst))))
 
 (defun extract-node-slots (node-struct)
-  (remove-if #'null
-	     (mapcar #'(lambda (d)
-			 (when (string= (xmls:node-name d) "SLOTS")
-			   d))
-		     node-struct)))
-
+  "特定ノード（Struct）がもつ部分概念・属性概念を抽出"
+  ;; (xmls:node-children
+  ;;  (car
+  ;;   (remove-if #'null
+  ;; 	       (mapcar #'(lambda (d)
+  ;; 			   (when (string= (xmls:node-name d) "SLOTS") d))
+		       (xmls:node-children node-struct))))))
+  
 
 #|------------- 検索機 |#
 ;;; ノード名が対象のものと合致するまでCHILDRENのノードを検索
@@ -443,28 +452,52 @@
   (first (node-searcher-by-attribute #'extract-node-label node-label struct)))
 
 ;;; 各基本概念（問いインスタンス）に当たるノードのPart-of（すなわちクエスチョンのプレースホルダーに入る問い）部分と，そのRequiredKeywordを抽出
-(defun extract-part-and-keyword (node)
-  (let* ((node-lst
-	   (extract-node-slots
-	    (xmls:node-children node)))
-	 (n-lst (flatten
-		 (mapcar #'xmls:node-children
-			 node-lst))))
-    (mapcar #'(lambda (d)
-		(list (second (assoc "role" (xmls:node-attrs d) :test #'string=))
-		      (loop for tmp in (car
-					(mapcar #'(lambda (sd)
-						    (flatten (mapcar #'xmls:node-children (xmls:node-children sd))))
-						(loop for x in (xmls:node-children d)
-						      when (string= "SLOTS" (xmls:node-name x))
-							collect x)))
-			    when (string= (xmls:node-name tmp) "SUB_L")
-			      collect (second (assoc "class_const" (xmls:node-attrs tmp) :test #'string=)))))
-	    n-lst)))
+;; (defun extract-part-and-keyword (node)
+;;   (let* ((node-lst
+;; 	   (extract-node-slots
+;; 	    (xmls:node-children node)))
+;; 	 (n-lst (flatten
+;; 		 (mapcar #'xmls:node-children
+;; 			 node-lst))))
+;;     (mapcar #'(lambda (d)
+;; 		(list (second (assoc "role" (xmls:node-attrs d) :test #'string=))
+;; 		      (loop for tmp in (car
+;; 					(mapcar #'(lambda (sd)
+;; 						    (flatten (mapcar #'xmls:node-children (xmls:node-children sd))))
+;; 						(loop for x in (xmls:node-children d)
+;; 						      when (string= "SLOTS" (xmls:node-name x))
+;; 							collect x)))
+;; 			    when (string= (xmls:node-name tmp) "SUB_L")
+;; 			      collect (second (assoc "class_const" (xmls:node-attrs tmp) :test #'string=)))))
+;; 	    n-lst)))
     
 
+#|------- Utilities  --------|# 
+(defun get-concept-labels ()
+  "概念ノードのラベル一覧を取得"
+  (mapcar #'extract-node-label
+	  (node-searcher-by-structure-name "CONCEPT")))
 
-  
+(defun get-instance-labels ()
+  "インスタンスノードのラベル一覧を取得"
+  (mapcar #'extract-node-label
+	  (instance-node-searcher)))
+
+(defun instance-concept-p (concept-name)
+  "インスタンスノードかどうかを調べる"
+  (not (null (find concept-name (get-instance-labels) :test #'string=))))
+
+(defun get-concept-id (concept-name)
+  "指定したラベルを持つConceptのIDを取得"
+  (extract-node-id
+   (node-searcher-by-label concept-name)))
+
+(defun get-sub-concepts (concept-name)
+  "指定したラベルを持つノードのサブ概念の一覧を返す"
+  (extract-node-slots
+   (node-searcher-by-label concept-name)))
+
+
 #|------------- 処理 |#
 ;;; IDのインクリメントする
 (defun generate-increamented-newest-node-id (id)
