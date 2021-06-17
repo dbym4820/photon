@@ -25,33 +25,6 @@
 (in-package :photon.hozo)
 
 #|
-オントロジーのXMLからオブジェクトへのコンバート
-|#
-
-;;; 指定基本概念のスロット内の1属性を抽出
-(defun get-attribute-from-slot-tags (concept-name attribute concept-list &optional (xml-file-path *default-ontology-file*))
-  (let ((concept-tags (get-concept-slot-tags concept-name concept-list xml-file-path)))
-    (labels ((tmp-func (att)
-	       (find-if #'(lambda (attr)
-                            (tag-p attribute attr))
-                        (second att))))
-       (mapcar #'(lambda (slot-tag)
-		   (tmp-func slot-tag))
-	       concept-tags))))
-
-;;; 指定された基本概念が持つスロット情報を取得
-(defun get-slot-tags (concept-name concept-list &optional (xml-file-path *default-ontology-file*))
-  (mapcar #'list
-	  (get-attribute-from-slot-tags concept-name "id" concept-list xml-file-path)
-          (get-attribute-from-slot-tags concept-name "role" concept-list xml-file-path)
-          (get-attribute-from-slot-tags concept-name "kind" concept-list xml-file-path)
-          (get-attribute-from-slot-tags concept-name "class_constraint" concept-list xml-file-path)
-          (get-attribute-from-slot-tags concept-name "rh_name" concept-list xml-file-path)
-          (get-attribute-from-slot-tags concept-name "num" concept-list xml-file-path)
-	  (get-attribute-from-slot-tags concept-name "value" concept-list xml-file-path)))
-
-
-#|
 オントロジーのCLOSへのコンバート
 |#
 (defun convert-ontology-hozo (&key (file-path *default-ontology-file*) (ont *default-ontology*) (update t))
@@ -67,8 +40,7 @@
         (convert-part-attribute-concept ont)
 	(format t "Finalize...~%")
         (format t "~t~t Converted Concepts~%~t~t~t * ~{~A~^ ~}~%~%" (show-concepts ont))
-	t
-	)
+	t)
       file-path))
 
 (defun convert-concept (&optional (ont *default-ontology*))
@@ -83,7 +55,6 @@
   "諸基本情報のの変換"
   (loop for c in (concatenate 'list (find-basic-concept-names) (find-instance-names))
 	do (let ((target-concept (find-concept c ont)) ;; CLOSオブジェクト
-		 (target-concept-structure (find-concept-node-struct-from-name c)) ;; XMLのStruct
 		 (parent-concept-label
 		   (or
 		    (find-parent-concept c)

@@ -267,13 +267,18 @@ CLOSオントロジー操作用API
 	  (concept-id concept)
 	  (concept-name concept)
 	  (or
-	   (mapcar #'concept-name
+	   (mapcar #'(lambda (c)
+		       (when (not (null c))
+			 (concept-name c)))
 		   (remove-if #'null (property-list concept)))
 	   "nothing")
 	  (if (instantiation concept) "TRUE" "FALSE")
-	  (concept-name (parent-concept concept))
+	  (when (parent-concept concept)
+	    (concept-name (parent-concept concept)))
 	  (or
-	   (mapcar #'concept-name
+	   (mapcar #'(lambda (c)
+		       (when (not (null c))
+			 (concept-name c)))
 		   (child-concept-list concept))
 	   "nothing")))
 (defmethod show-attribute ((concept-string string) &key (ont *default-ontology*))
@@ -284,13 +289,18 @@ CLOSオントロジー操作用API
 	    (concept-id concept)
 	    (concept-name concept)
 	    (or
-	     (mapcar #'concept-name
+	     (mapcar #'(lambda (c)
+			 (when (not (null c))
+			   (concept-name c)))  
 		     (remove-if #'null (property-list concept)))
 	     "nothing")
 	    (if (instantiation concept) "TRUE" "FALSE")
-	    (concept-name (parent-concept concept))
+	    (when (parent-concept concept)
+	      (concept-name (parent-concept concept)))
 	    (or
-	     (mapcar #'concept-name
+	     (mapcar #'(lambda (c)
+			 (when (not (null c))
+			   (concept-name c)))
 		     (child-concept-list concept))
 	     "nothing"))))
 (defmethod show-attribute ((concept non-basic-concept) &key (ont *default-ontology*))
