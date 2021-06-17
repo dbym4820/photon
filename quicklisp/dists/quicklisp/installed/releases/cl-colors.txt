@@ -1,1 +1,0 @@
-dists/quicklisp/software/cl-colors-20180328-git/

@@ -1,1 +1,0 @@
-dists/quicklisp/software/chipz-20190202-git/chipz.asd

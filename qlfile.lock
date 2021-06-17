@@ -1,7 +1,7 @@
 ("quicklisp" .
  (:class qlot.source.ql:source-ql-all
   :initargs (:distribution "http://beta.quicklisp.org/dist/quicklisp.txt" :%version :latest)
-  :version "2019-05-21"))
+  :version "2021-05-31"))
 ("ceramic" .
  (:class qlot.source.git:source-git
   :initargs (:project-name "ceramic" :remote-url "https://github.com/dbym4820/ceramic.git" :branch "master")

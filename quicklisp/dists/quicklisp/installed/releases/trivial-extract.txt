@@ -1,1 +1,0 @@
-dists/quicklisp/software/trivial-extract-20160421-git/

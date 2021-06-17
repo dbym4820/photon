@@ -1,1 +1,0 @@
-dists/quicklisp/software/cl-syntax-20150407-git/cl-syntax-clsql.asd

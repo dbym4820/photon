@@ -1,1 +1,0 @@
-dists/quicklisp/software/named-readtables-20180131-git/

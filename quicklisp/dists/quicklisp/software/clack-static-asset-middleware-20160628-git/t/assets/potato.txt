@@ -1,8 +1,0 @@
-russet
-red
-white
-yellow
-purple
-blue
-fingerling
-petite

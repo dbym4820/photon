@@ -1,7 +1,0 @@
-# FASLs
-*.fasl
-*.ofasl
-*.nfasl
-*.xfasl
-# Backup files
-*~

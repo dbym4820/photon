@@ -1,1 +1,0 @@
-dists/quicklisp/software/prove-20171130-git/cl-test-more.asd

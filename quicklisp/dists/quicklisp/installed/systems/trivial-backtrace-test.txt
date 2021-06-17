@@ -1,1 +1,0 @@
-dists/quicklisp/software/trivial-backtrace-20160531-git/trivial-backtrace-test.asd
