@@ -11,17 +11,23 @@
    ))
 (in-package :photon.server)
 
+(defun property-serialize (property-list)
+  (loop for pair in property-list
+	for x from 1
+	collect (cons (format nil "~A_#~A" (car pair) x) (cdr pair))))
+
 (defun make-concept-from-string (arg)
   "functions for generate json"
   (if (photon.ontology:find-concept arg)
       (let* ((concept-info (photon.ontology:find-concept arg))
   	     (concept-name (photon.ontology:concept-name concept-info))
   	     (concept-id (photon.ontology:concept-id concept-info))
-  	     (properties (mapcar #'(lambda (c)
-				(cons (photon.ontology:concept-name c)
-				      (photon.ontology:class-restriction c)))
-				 (remove-if #'null
-					    (photon.ontology:property-list concept-info))))
+  	     (properties (property-serialize
+			  (mapcar #'(lambda (c)
+				      (cons (photon.ontology:concept-name c)
+					    (photon.ontology:class-restriction c)))
+				  (remove-if #'null
+					     (photon.ontology:property-list concept-info)))))
   	     (is-instance (if (photon.ontology:instantiation concept-info) "true" "false"))
   	     (parent-concept (photon.ontology:concept-name (photon.ontology:parent-concept concept-info)))
   	     (child-concepts (mapcar #'photon.ontology:concept-name (photon.ontology:child-concept-list concept-info))))
@@ -42,12 +48,12 @@
       (let* ((concept-info (photon.ontology:find-concept-from-id arg))
 	     (concept-name (photon.ontology:concept-name concept-info))
 	     (concept-id (photon.ontology:concept-id concept-info))
-	     (properties (mapcar #'(lambda (c)
-
-				(cons (photon.ontology:concept-name c)
-				      (photon.ontology:class-restriction c)))
-				 (remove-if #'null
-					    (photon.ontology:property-list concept-info))))
+	     (properties (property-serialize
+			  (mapcar #'(lambda (c)
+				      (cons (photon.ontology:concept-name c)
+					    (photon.ontology:class-restriction c)))
+				  (remove-if #'null
+					     (photon.ontology:property-list concept-info)))))
 	     (is-instance (if (photon.ontology:instantiation concept-info) "true" "false"))
 	     (parent-concept (photon.ontology:concept-name (photon.ontology:parent-concept concept-info)))
 	     (child-concepts (mapcar #'photon.ontology:concept-name (photon.ontology:child-concept-list concept-info))))
