@@ -43,6 +43,7 @@
 	     (concept-name (photon.ontology:concept-name concept-info))
 	     (concept-id (photon.ontology:concept-id concept-info))
 	     (properties (mapcar #'(lambda (c)
+
 				(cons (photon.ontology:concept-name c)
 				      (photon.ontology:class-restriction c)))
 				 (remove-if #'null

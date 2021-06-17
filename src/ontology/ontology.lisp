@@ -144,7 +144,7 @@
         (append
 	 (if (consp (concept-list target-ontology))
 	     (concept-list target-ontology)
-	     `(,(concept-list target-ontology)))
+	     (remove-if #'null `(,(concept-list target-ontology))))
 	 (cons new-class nil))))
 
 ;;; オントロジーに関係概念を挿入
@@ -153,7 +153,7 @@
         (append
 	 (if (consp (concept-list target-ontology))
 	     (concept-list target-ontology)
-	     `(,(concept-list target-ontology)))
+	     (remove-if #'null `(,(concept-list target-ontology))))
 	 (cons new-relation nil))))
 
 ;;; 基本概念にプロパティを挿入
@@ -162,7 +162,7 @@
         (append
 	 (if (consp (property-list target-concept))
 	     (property-list target-concept)
-	     `(,(property-list target-concept)))
+	     (remove-if #'null `(,(property-list target-concept))))
 	 (cons new-property nil))))
 
 ;;; 部分概念にプロパティを挿入
@@ -171,7 +171,7 @@
         (append
 	 (if (consp (property-list target-concept))
 	     (property-list target-concept)
-	     `(,(property-list target-concept)))
+	     (remove-if #'null `(,(property-list target-concept))))
 	 (cons new-property nil))))
 
 
@@ -181,7 +181,7 @@
         (append
 	 (if (consp (property-list target-relation))
 	     (property-list target-relation)
-	     `(,(property-list target-relation)))
+	     (remove-if #'null `(,(property-list target-relation))))
 	 (cons new-property nil))))
 
 ;;; 概念のデータを更新
