@@ -11,8 +11,8 @@
    ))
 (in-package :photon.server)
 
-;;; functions for generate json
 (defun make-concept-from-string (arg)
+  "functions for generate json"
   (if (photon.ontology:find-concept arg)
       (let* ((concept-info (photon.ontology:find-concept arg))
   	     (concept-name (photon.ontology:concept-name concept-info))
@@ -43,6 +43,7 @@
 	     (concept-name (photon.ontology:concept-name concept-info))
 	     (concept-id (photon.ontology:concept-id concept-info))
 	     (properties (mapcar #'(lambda (c)
+
 				(cons (photon.ontology:concept-name c)
 				      (photon.ontology:class-restriction c)))
 				 (remove-if #'null
